@@ -159,6 +159,86 @@
       margin-bottom:16px;
     }
 
+    
+    .compact-summary{
+      background:#FBFCFF;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px 18px;
+      margin:8px 0 16px;
+    }
+    .compact-summary-title{
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:8px;
+    }
+    .compact-traj-row{
+      display:grid;
+      grid-template-columns:110px 1fr;
+      gap:12px;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    .compact-traj-label{
+      font-size:15px;
+      color:var(--muted);
+      font-weight:bold;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+    .compact-traj-pill{
+      display:inline-block;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:bold;
+      background:#FFF6D8;
+      border:1px solid #E8D38E;
+      color:var(--text);
+    }
+    .compact-comp{
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+    .compact-row{
+      display:grid;
+      grid-template-columns:92px 1fr 100px;
+      gap:10px;
+      align-items:center;
+    }
+    .compact-label{
+      font-size:15px;
+      color:var(--text);
+      font-weight:bold;
+    }
+    .compact-track{
+      height:12px;
+      background:#EEF2F8;
+      border:1px solid var(--line);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .compact-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      transition:width .25s ease;
+    }
+    .compact-fluid{ background:var(--ua-red); }
+    .compact-weight{ background:var(--ua-blue); }
+    .compact-text{
+      font-size:14px;
+      text-align:right;
+      color:var(--text);
+    }
+    .compact-note{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+
     .field-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
@@ -465,6 +545,27 @@
       <div class="panel">
         <h2>Quick patient check</h2>
         <div class="sub">Start with the fluid signal. Add context if needed.</div>
+        <div class="compact-summary">
+          <div class="compact-summary-title">Quick visual summary</div>
+          <div class="compact-traj-row">
+            <div class="compact-traj-label">Trajectory</div>
+            <div><span id="compactTrajectoryPill" class="compact-traj-pill">No data yet</span></div>
+          </div>
+          <div class="compact-comp">
+            <div class="compact-row">
+              <div class="compact-label">Fluid</div>
+              <div class="compact-track"><div id="compactFluidBar" class="compact-fill compact-fluid"></div></div>
+              <div id="compactFluidText" class="compact-text">No data</div>
+            </div>
+            <div class="compact-row">
+              <div class="compact-label">Weight</div>
+              <div class="compact-track"><div id="compactWeightBar" class="compact-fill compact-weight"></div></div>
+              <div id="compactWeightText" class="compact-text">No data</div>
+            </div>
+          </div>
+          <div id="compactNote" class="compact-note">Enter data to see whether the fluid signal is outpacing weight.</div>
+        </div>
+
 
         <div class="section">
           <h3>1. Enter the fluid signal</h3>
@@ -681,6 +782,42 @@
         insight.textContent = "Fluid signal and weight are both rising. This suggests congestion is becoming easier to see clinically as well.";
       } else {
         insight.textContent = "Weight and fluid signal are not showing a strongly concerning divergence right now.";
+      }
+
+      const compactPill = document.getElementById("compactTrajectoryPill");
+      const compactFluidBar = document.getElementById("compactFluidBar");
+      const compactWeightBar = document.getElementById("compactWeightBar");
+      const compactFluidText = document.getElementById("compactFluidText");
+      const compactWeightText = document.getElementById("compactWeightText");
+      const compactNote = document.getElementById("compactNote");
+
+      compactFluidBar.style.width = fluidPct + "%";
+      compactWeightBar.style.width = weightPct + "%";
+      compactFluidText.textContent = ecw ? `+${ecw}%` : "No data";
+      compactWeightText.textContent = weight5 ? `+${weight5} lb` : "No data";
+
+      if(!ecw && !weight5){
+        compactPill.textContent = "No data yet";
+        compactPill.style.background = "#F4F6FA";
+        compactPill.style.borderColor = "#D7DDEA";
+        compactNote.textContent = "Enter data to see whether the fluid signal is outpacing weight.";
+      } else if(concern < 35){
+        compactPill.textContent = "Stable";
+        compactPill.style.background = "#EEF8F0";
+        compactPill.style.borderColor = "#CBE6D2";
+        compactNote.textContent = "Current inputs do not suggest a strong early-congestion pattern.";
+      } else if(concern < 70){
+        compactPill.textContent = "Early congestion";
+        compactPill.style.background = "#FFF6D8";
+        compactPill.style.borderColor = "#E8D38E";
+        compactNote.textContent = ecw >= 5 && weight5 < 3
+          ? "Fluid signal is ahead of weight, which is the pattern this tool is meant to surface."
+          : "Fluid signal and weight are both rising, suggesting early congestion is becoming more visible.";
+      } else {
+        compactPill.textContent = "Worsening";
+        compactPill.style.background = "#FFF0E0";
+        compactPill.style.borderColor = "#EBC99A";
+        compactNote.textContent = "The patient appears farther along the congestion pathway and should be reviewed more closely.";
       }
     }
 
