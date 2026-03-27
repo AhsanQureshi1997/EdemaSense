@@ -3,201 +3,415 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EdemaSense - Early Congestion Detection Prototype</title>
+  <title>EdemaSense - Preview-Matched Layout</title>
   <style>
     :root{
       --ua-red:#AB0520;
       --ua-blue:#0C234B;
-      --ua-midnight:#001C48;
-      --ua-azurite:#1E5288;
-      --bg:#f6f8fc;
-      --panel:#ffffff;
-      --line:#d7ddea;
-      --text:#13233f;
-      --muted:#5a6880;
-      --soft-blue:#edf3fb;
-      --soft-red:#fff0f2;
-      --good:#1b7f52;
-      --warn:#b87400;
-      --bad:#a51d2d;
+      --bg:#EEF2F8;
+      --panel:#FFFFFF;
+      --line:#D7DDEA;
+      --text:#13233F;
+      --muted:#5A6880;
+      --soft:#F8FAFD;
+      --soft-blue:#EEF4FB;
+      --soft-yellow:#FFF6D8;
+      --yellow-border:#E8D38E;
+      --gold:#C58B00;
+      --good:#2F8A57;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, #f7f9fd 0%, #edf2fa 100%);
+      background:var(--bg);
       color:var(--text);
     }
-    .wrap{max-width:1220px; margin:0 auto; padding:24px 18px 44px}
+    .wrap{
+      max-width:1460px;
+      margin:12px auto 28px;
+      padding:0 14px 24px;
+    }
     .hero{
-      background: linear-gradient(135deg, var(--ua-blue) 0%, var(--ua-midnight) 58%, var(--ua-red) 100%);
-      color:white;
-      border-radius:22px;
-      padding:28px 30px 24px;
-      box-shadow:0 16px 40px rgba(12,35,75,.18);
+      background:linear-gradient(135deg, #07275d 0%, #082a63 55%, #9b1232 100%);
+      color:#fff;
+      border-radius:28px;
+      padding:28px 34px;
       position:relative;
       overflow:hidden;
+      box-shadow:0 12px 28px rgba(12,35,75,.12);
     }
     .hero:after{
       content:"";
       position:absolute;
-      right:-120px; top:-100px;
-      width:300px; height:300px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,.18), rgba(255,255,255,0));
+      right:-80px;
+      top:-90px;
+      width:290px;
+      height:290px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0));
     }
-    .brandline{
-      display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13px; letter-spacing:.08em; text-transform:uppercase;
-      opacity:.95; font-weight:bold;
+    .eyebrow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:18px;
+      font-weight:bold;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      opacity:.95;
     }
-    .brand-badge{
-      width:14px; height:14px; border-radius:3px;
+    .eyebrow-badge{
+      width:18px;
+      height:18px;
+      border-radius:4px;
       background:linear-gradient(180deg, var(--ua-red) 0 50%, var(--ua-blue) 50% 100%);
-      border:1px solid rgba(255,255,255,.45);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.5);
     }
-    h1{margin:0 0 10px; font-size:34px; line-height:1.08}
-    .hero p{margin:0; max-width:900px; color:rgba(255,255,255,.92); line-height:1.55; font-size:16px}
+    h1{
+      margin:18px 0 10px;
+      font-size:66px;
+      line-height:1.02;
+    }
+    .hero p{
+      margin:0;
+      max-width:1120px;
+      font-size:21px;
+      line-height:1.45;
+      color:rgba(255,255,255,.96);
+    }
     .hero-note{
-      margin-top:14px; display:inline-block; padding:10px 12px; border-radius:12px;
-      background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.18); font-size:13px;
+      display:inline-block;
+      margin-top:22px;
+      padding:13px 18px;
+      border-radius:16px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:18px;
     }
 
+    .top-cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-top:26px;
+    }
+    .mini-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px 22px;
+      box-shadow:0 6px 16px rgba(16,35,70,.04);
+    }
+    .mini-k{
+      font-size:18px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      margin-bottom:10px;
+    }
+    .mini-v{
+      font-size:26px;
+      font-weight:bold;
+      line-height:1.25;
+    }
 
-    .top-summary{
-      display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:20px;
+    .main-grid{
+      display:grid;
+      grid-template-columns:1.15fr .95fr;
+      gap:24px;
+      margin-top:24px;
     }
-    .top-summary .mini{
-      background:#ffffff; border:1px solid var(--line); border-radius:16px; padding:14px 16px;
-      box-shadow:0 6px 18px rgba(16,35,70,.04);
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:28px;
+      box-shadow:0 8px 20px rgba(16,35,70,.05);
     }
-    .top-grid, .bottom-grid{
-      display:grid; gap:20px; margin-top:20px;
+    .panel h2{
+      margin:0 0 14px;
+      font-size:56px;
+      line-height:1.05;
     }
-    .top-grid{grid-template-columns: 1.08fr .92fr}
-    .bottom-grid{grid-template-columns: 1fr 1fr}
-    .card{
-      background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:22px;
-      box-shadow:0 10px 28px rgba(16,35,70,.05);
+    .sub{
+      color:var(--muted);
+      font-size:20px;
+      line-height:1.5;
+      margin-bottom:22px;
     }
-    h2{margin:0 0 10px; font-size:23px}
-    h3{margin:0 0 10px; font-size:16px}
-    .sub{font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:16px}
-    .section{border-top:1px solid var(--line); padding-top:16px; margin-top:16px}
+    .section{
+      border-top:1px solid var(--line);
+      margin-top:18px;
+      padding-top:18px;
+    }
+    .section h3{
+      margin:0 0 10px;
+      font-size:23px;
+    }
+    .small-sub{
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.45;
+      margin-bottom:16px;
+    }
 
-    .two-col{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 16px}
-    .field label{display:block; margin-bottom:6px; font-size:12px; color:var(--muted); font-weight:bold; text-transform:uppercase; letter-spacing:.04em}
+    .field-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px 18px;
+    }
+    .field label{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:15px;
+      text-transform:uppercase;
+      font-weight:bold;
+      letter-spacing:.03em;
+      line-height:1.2;
+    }
     input, select{
-      width:100%; padding:11px 12px; border-radius:11px; border:1px solid #cad3e3; background:white; color:var(--text); font-size:14px;
+      width:100%;
+      border:1px solid #CBD5E4;
+      border-radius:16px;
+      padding:15px 16px;
+      font-size:18px;
+      color:var(--text);
+      background:#fff;
     }
-    .checks{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px; margin-top:6px}
+    .symptom-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px 18px;
+      margin-top:10px;
+    }
     .check{
-      display:flex; gap:10px; align-items:flex-start; padding:11px 12px; border-radius:14px; border:1px solid var(--line); background:#fbfcff;
-      font-size:14px; line-height:1.4;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:18px;
+      color:var(--text);
     }
-    .check input{width:auto; margin-top:2px}
-
-    .actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+    .check input{
+      width:20px;
+      height:20px;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
     button{
-      border:none; border-radius:12px; padding:12px 15px; font-weight:bold; cursor:pointer; font-size:14px;
+      border:none;
+      border-radius:16px;
+      padding:15px 18px;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
     }
-    .primary{background:var(--ua-red); color:#fff}
-    .secondary{background:var(--soft-blue); color:var(--ua-blue); border:1px solid #d7e3f4}
-    .tertiary{background:#f7f8fb; color:var(--text); border:1px solid var(--line)}
+    .primary{background:var(--ua-blue); color:#fff;}
+    .secondary{background:var(--soft-blue); color:var(--ua-blue); border:1px solid #D7E3F3;}
 
-    .risk-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px}
+    .results-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
     .pill{
-      padding:7px 12px; border-radius:999px; font-size:13px; font-weight:bold; border:1px solid transparent;
+      margin-top:2px;
+      padding:10px 18px;
+      border-radius:999px;
+      font-size:18px;
+      font-weight:bold;
+      border:1px solid #efbcc5;
+      color:#b22638;
+      background:#FFF2F4;
+      white-space:nowrap;
     }
-    .pill.low{color:var(--good); background:#edf8f2; border-color:#cdecd9}
-    .pill.mod{color:var(--warn); background:#fff4e2; border-color:#efd9a8}
-    .pill.high{color:var(--bad); background:#fdecef; border-color:#f0c3cc}
-    .score{display:flex; gap:14px; align-items:flex-end}
-    .score .num{font-size:56px; font-weight:bold; line-height:.9; color:var(--ua-blue)}
-    .score .meta{font-size:14px; color:var(--muted); line-height:1.45}
-    .bar{height:16px; margin:14px 0 16px; border-radius:999px; overflow:hidden; border:1px solid #d8dfeb; background:#edf1f8}
-    .fill{height:100%; width:0%; transition:width .25s ease; background:linear-gradient(90deg, #2b8b5f 0%, #d09a12 55%, var(--ua-red) 100%)}
-    .summary{
-      background:linear-gradient(180deg, #fff, #f8fbff);
-      border:1px solid #dbe4f0; border-left:5px solid var(--ua-red); border-radius:14px; padding:14px; line-height:1.55; font-size:14px;
+    .status-banner{
+      background:var(--soft-yellow);
+      border:2px solid var(--yellow-border);
+      border-radius:22px;
+      padding:20px 22px;
+      margin-top:8px;
+    }
+    .status-title{
+      font-size:52px;
+      font-weight:bold;
+      line-height:1.05;
+      margin-bottom:8px;
+    }
+    .status-sub{
+      font-size:27px;
+      line-height:1.3;
+      margin-bottom:8px;
+    }
+    .status-window{
+      color:var(--muted);
+      font-size:22px;
+    }
+    .driver-card{
+      background:var(--soft);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px 22px;
+      margin-top:18px;
+    }
+    .driver-title{
+      font-size:28px;
+      font-weight:bold;
+      margin-bottom:12px;
+    }
+    .driver-list{
+      margin:0;
+      padding-left:22px;
+      font-size:21px;
+      line-height:1.55;
     }
 
-    .mini-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:16px}
-    .mini{
-      border:1px solid var(--line); border-radius:15px; background:#fbfcff; padding:14px;
+    .chart-panel{
+      margin-top:20px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
     }
-    .mini .k{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
-    .mini .v{margin-top:7px; font-size:24px; font-weight:bold}
-    ul{margin:10px 0 0 18px; padding:0; line-height:1.6}
-    li{margin-bottom:7px}
+    .chart-title{
+      font-size:30px;
+      font-weight:bold;
+      margin-bottom:6px;
+    }
+    .chart-sub{
+      color:var(--muted);
+      font-size:18px;
+      margin-bottom:12px;
+    }
+    .legend{
+      display:flex;
+      gap:22px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:16px;
+      margin-bottom:12px;
+    }
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .dot{
+      width:12px;
+      height:12px;
+      border-radius:999px;
+      display:inline-block;
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block;
+      background:#FBFCFF;
+      border:1px solid var(--line);
+      border-radius:18px;
+    }
 
-    .trend-card{
-      background:linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+    .next-step{
+      margin-top:18px;
+      background:#F9FBFE;
+      border:1px solid var(--line);
+      border-left:6px solid var(--ua-red);
+      border-radius:18px;
+      padding:18px 20px;
     }
-    .legend{display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin-bottom:10px}
-    .legend span{display:inline-flex; align-items:center; gap:7px}
-    .dot{width:11px; height:11px; border-radius:999px; display:inline-block}
-    svg{width:100%; height:auto; display:block; background:#fff; border:1px solid var(--line); border-radius:16px}
-    .chart-note{font-size:13px; color:var(--muted); margin-top:10px; line-height:1.5}
+    .next-step h3{
+      margin:0 0 10px;
+      font-size:26px;
+    }
+    .next-step ul{
+      margin:0;
+      padding-left:22px;
+      font-size:20px;
+      line-height:1.55;
+    }
 
-    .research-box{
-      background:linear-gradient(180deg, var(--soft-blue) 0%, #ffffff 100%);
-      border:1px solid #d6e2f2; border-radius:16px; padding:15px;
-      line-height:1.55; font-size:14px;
-    }
-    .callout{
-      margin-top:12px; padding:13px 14px; border-radius:14px; background:var(--soft-red); border:1px solid #f1c4cb;
-      font-size:14px; line-height:1.55;
-    }
-    .small{font-size:12px; color:var(--muted); line-height:1.5}
-
-    @media (max-width: 980px){
-      .top-grid, .bottom-grid{grid-template-columns:1fr}
-      .two-col, .checks, .mini-grid{grid-template-columns:1fr}
-      h1{font-size:30px}
+    @media (max-width: 1200px){
+      .main-grid{grid-template-columns:1fr}
+      .top-cards{grid-template-columns:1fr}
+      h1{font-size:50px}
+      .panel h2{font-size:42px}
+      .status-title{font-size:42px}
+      .field-grid, .symptom-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="hero">
-      <div class="brandline"><span class="brand-badge"></span> UACOMP-inspired prototype interface</div>
+      <div class="eyebrow"><span class="eyebrow-badge"></span> UACOMP-inspired prototype interface</div>
       <h1>EdemaSense: Early Congestion Detection</h1>
-      <p>
-        A research-facing prototype built around a narrower clinical question than a generic heart-failure score:
-        can a technology-derived extracellular fluid signal identify worsening congestion before obvious decompensation,
-        hospitalization, or an ED visit?
-      </p>
+      <p>Uses a device-derived fluid signal to detect early congestion before symptoms worsen.</p>
       <div class="hero-note">Concept demo only. Not a validated model, not a medical device, and not for patient care.</div>
     </div>
 
-
-    <div class="top-summary">
-      <div class="mini">
-        <div class="k">Best first step</div>
-        <div class="v" style="font-size:18px;">Start with the fluid signal</div>
+    <div class="top-cards">
+      <div class="mini-card">
+        <div class="mini-k">Best first step</div>
+        <div class="mini-v">Start with the fluid signal</div>
       </div>
-      <div class="mini">
-        <div class="k">Fastest read</div>
-        <div class="v" style="font-size:18px;">Check the result card</div>
+      <div class="mini-card">
+        <div class="mini-k">Fastest read</div>
+        <div class="mini-v">Check the status banner</div>
       </div>
-      <div class="mini">
-        <div class="k">Best visual</div>
-        <div class="v" style="font-size:18px;">Use the trend chart</div>
+      <div class="mini-card">
+        <div class="mini-k">Best visual</div>
+        <div class="mini-v">Use the trend chart</div>
       </div>
     </div>
 
-    <div class="top-grid">
-      <div class="card">
-        <h2>Patient snapshot</h2>
-        <div class="sub">
-          This version is built around one main question: <strong>is fluid building up earlier than we would usually catch it?</strong> Start with the fluid signal, then add a few simple symptoms and vital signs.
+    <div class="main-grid">
+      <div class="panel">
+        <div class="results-head">
+          <h2>Current status</h2>
+          <div id="resultPill" class="pill">Escalation approaching</div>
         </div>
 
+        <div id="statusBanner" class="status-banner">
+          <div id="statusTitle" class="status-title">Early Congestion Detected</div>
+          <div id="statusSub" class="status-sub">Fluid signal rising above baseline</div>
+          <div id="statusWindow" class="status-window">Likely worsening window: 5 to 7 days</div>
+        </div>
+
+        <div class="driver-card">
+          <div class="driver-title">Why this was flagged</div>
+          <ul id="driverList" class="driver-list"></ul>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-title">Trend view</div>
+          <div class="chart-sub">Read this as a monitoring view, not just a one-time score.</div>
+          <div class="legend">
+            <span class="legend-item"><span class="dot" style="background:#AB0520"></span>Fluid signal</span>
+            <span class="legend-item"><span class="dot" style="background:#0C234B"></span>Weight</span>
+            <span class="legend-item"><span class="dot" style="background:#C58B00"></span>Overall concern</span>
+          </div>
+          <svg id="chart" viewBox="0 0 760 300" aria-label="trend chart"></svg>
+        </div>
+
+        <div class="next-step">
+          <h3>Next step</h3>
+          <ul id="nextSteps"></ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Quick patient check</h2>
+        <div class="sub">The fluid signal leads this page. Symptoms and vitals are optional supporting context.</div>
+
         <div class="section">
-          <h3>1. Main fluid signal</h3>
-          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Enter the device-based fluid signal first. The rest of the page adds context.</div>
-          <div class="two-col">
+          <h3>1. Enter the fluid signal</h3>
+          <div class="small-sub">Start with the device-derived fluid reading and how fast it has been rising.</div>
+          <div class="field-grid">
             <div class="field">
               <label>Fluid signal above baseline (%)</label>
               <input id="ecw" type="number" value="8" />
@@ -206,30 +420,22 @@
               <label>Fluid signal trend</label>
               <select id="trajectory">
                 <option value="0">Stable</option>
-                <option value="1">Slow rise over several days</option>
-                <option value="2" selected>Consistent rise over several days</option>
-                <option value="3">Rapid rise in 48 hours</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Weight change in 5 days (lb)</label>
-              <input id="weight5" type="number" value="3.5" step="0.1" />
-            </div>
-            <div class="field">
-              <label>If the trend continues, likely time to worsening</label>
-              <select id="timeRisk">
-                <option value="0">Low concern / not estimated</option>
-                <option value="1">Likely &gt; 10 days</option>
-                <option value="2" selected>Likely 5 to 7 days</option>
-                <option value="3">Likely 48 to 96 hours</option>
+                <option value="1">Slow rise</option>
+                <option value="2" selected>Consistent rise</option>
+                <option value="3">Rapid rise</option>
               </select>
             </div>
           </div>
         </div>
 
         <div class="section">
-          <h3>2. Symptoms and basic vitals</h3>
-          <div class="two-col">
+          <h3>2. Add quick clinical context</h3>
+          <div class="small-sub">Use only what is clearly present.</div>
+          <div class="field-grid">
+            <div class="field">
+              <label>Weight change in 5 days (lb)</label>
+              <input id="weight5" type="number" step="0.1" value="3.5" />
+            </div>
             <div class="field">
               <label>Systolic blood pressure</label>
               <input id="sbp" type="number" value="108" />
@@ -242,112 +448,27 @@
               <label>Oxygen saturation (%)</label>
               <input id="spo2" type="number" value="95" />
             </div>
-            <div class="field">
-              <label>Sodium (mEq/L)</label>
-              <input id="na" type="number" value="134" />
-            </div>
           </div>
-          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Keep this part short. Only check what is clearly present.</div>
-          <div class="section" style="margin-top:14px; padding-top:14px;">
-            <h3 style="margin-bottom:8px;">Symptoms you can add</h3>
-            <div class="sub" style="margin:0 0 12px; font-size:13px;">These are optional and should act as supporting context, not the main signal.</div>
-            <div class="checks">
-            <label class="check"><input id="orthopnea" type="checkbox" checked>Orthopnea or increasing exertional dyspnea</label>
-            <label class="check"><input id="edema" type="checkbox" checked>Peripheral edema</label>
-            <label class="check"><input id="fatigue" type="checkbox" checked>Reduced exercise tolerance</label>
-            <label class="check"><input id="adherence" type="checkbox">Medication or dietary adherence uncertainty</label>
-            <label class="check"><input id="recentAcute" type="checkbox">Recent ED visit or HF hospitalization</label>
-            <label class="check"><input id="crackles" type="checkbox">Pulmonary crackles or clear pulmonary congestion signs</label>
+
+          <div class="section">
+            <h3>Symptoms you can add</h3>
+            <div class="small-sub">These are optional. They help support the trend, but they do not drive the page.</div>
+            <div class="symptom-grid">
+              <label class="check"><input id="dyspnea" type="checkbox" checked /> Dyspnea</label>
+              <label class="check"><input id="edema" type="checkbox" checked /> Peripheral edema</label>
+              <label class="check"><input id="fatigue" type="checkbox" /> Fatigue</label>
+              <label class="check"><input id="crackles" type="checkbox" /> Crackles</label>
             </div>
           </div>
         </div>
 
         <div class="actions">
           <button class="primary" onclick="runModel()">Update results</button>
+          <button class="secondary" onclick="loadScenario('stable')">Example: stable patient</button>
           <button class="secondary" onclick="loadScenario('early')">Example: early congestion</button>
           <button class="secondary" onclick="loadScenario('high')">Example: high concern</button>
-          <button class="tertiary" onclick="loadScenario('low')">Example: stable patient</button>
         </div>
       </div>
-
-      <div class="card">
-        <div class="risk-head">
-          <h2 style="margin:0">Results</h2>
-          <div id="riskPill" class="pill mod">Early congestion likely</div>
-        </div>
-        <div class="score">
-          <div id="scoreNum" class="num">61</div>
-          <div class="meta">
-            Early congestion score<br>
-            <span id="scoreText">The dominant signal is a rising extracellular fluid burden.</span>
-          </div>
-        </div>
-        <div class="bar"><div class="fill" id="fillBar"></div></div>
-
-        <div id="summary" class="summary">
-          Objective fluid-retention signal and short-term trend changes suggest worsening congestion before overt instability.
-        </div>
-
-        <div class="section">
-          <h3>Suggested next steps</h3>
-          <ul id="stepsList"></ul>
-        </div>
-
-        <div class="mini-grid">
-          <div class="mini">
-            <div class="k">Early fluid build-up</div>
-            <div id="subclinicalOut" class="v">Present</div>
-          </div>
-          <div class="mini">
-            <div class="k">Trend</div>
-            <div id="trendOut" class="v">Rising</div>
-          </div>
-          <div class="mini">
-            <div class="k">Likely horizon</div>
-            <div id="horizonOut" class="v">5–7d</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-grid">
-      <div class="card trend-card">
-        <h2>Trend view</h2>
-        <div class="sub">
-          This chart is meant to be the quickest part to read. The red line shows the fluid signal, the blue line shows weight, and the gold line shows overall concern over the last week.
-        </div>
-        <div class="legend">
-          <span><i class="dot" style="background:var(--ua-red)"></i> Fluid signal</span>
-          <span><i class="dot" style="background:var(--ua-blue)"></i> Weight</span>
-          <span><i class="dot" style="background:#b87400"></i> Concern level</span>
-        </div>
-        <svg id="chart" viewBox="0 0 640 280" aria-label="Congestion trend chart"></svg>
-        <div id="chartNote" class="chart-note">
-          Over the last week, the fluid signal has risen faster than weight alone, which is the pattern this tool is trying to make easier to see.
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>What this tool is for</h2>
-        <div class="research-box">
-          This prototype is meant to make subtle fluid changes easier to see before the patient looks obviously worse.
-        </div>
-        <div class="section">
-          <h3>Best use</h3>
-          <ul>
-            <li>Track fluid-signal change next to short-term weight change.</li>
-            <li>Flag possible early congestion before the patient becomes clearly unstable.</li>
-            <li>Help decide how closely to monitor and when to follow up.</li>
-            <li>Show change over time instead of only giving a one-time score.</li>
-          </ul>
-        </div>
-        <div class="callout">
-          Prototype only. The output is a simple demonstration for research and workflow discussion.
-        </div>
-        <div class="section small">
-          Styled with an Arizona-inspired red and blue palette, without logos.
-        </div>
-      </div>      </div>
     </div>
   </div>
 
@@ -355,245 +476,210 @@
     const days = ["D1","D2","D3","D4","D5","D6","D7"];
 
     function num(id){ return Number(document.getElementById(id).value || 0); }
-    function checked(id){ return document.getElementById(id).checked; }
+    function isChecked(id){ return document.getElementById(id).checked; }
 
     function runModel(){
-      let score = 0;
-      const reasons = [];
-
       const ecw = num("ecw");
       const trajectory = num("trajectory");
       const weight5 = num("weight5");
-      const timeRisk = num("timeRisk");
       const sbp = num("sbp");
       const hr = num("hr");
       const spo2 = num("spo2");
-      const na = num("na");
 
-      if(ecw >= 12){ score += 30; reasons.push("marked extracellular fluid increase"); }
-      else if(ecw >= 8){ score += 22; reasons.push("clear extracellular fluid rise"); }
-      else if(ecw >= 5){ score += 14; reasons.push("mild extracellular fluid rise"); }
-      else if(ecw >= 2){ score += 7; reasons.push("small fluid signal increase"); }
+      let concern = 0;
+      const drivers = [];
 
-      if(trajectory === 1){ score += 8; reasons.push("slow upward signal trajectory"); }
-      if(trajectory === 2){ score += 15; reasons.push("consistent upward signal trajectory"); }
-      if(trajectory === 3){ score += 24; reasons.push("rapid fluid-signal acceleration"); }
+      if(ecw >= 12){ concern += 35; drivers.push(`Device-derived fluid signal: +${ecw}% above baseline`); }
+      else if(ecw >= 8){ concern += 26; drivers.push(`Device-derived fluid signal: +${ecw}% above baseline`); }
+      else if(ecw >= 5){ concern += 17; drivers.push(`Device-derived fluid signal: +${ecw}% above baseline`); }
+      else { drivers.push(`Device-derived fluid signal: +${ecw}% above baseline`); }
 
-      if(weight5 >= 6){ score += 14; reasons.push("large short-term weight increase"); }
-      else if(weight5 >= 3){ score += 9; reasons.push("early weight gain"); }
-      else if(weight5 >= 1.5){ score += 4; reasons.push("small weight change"); }
+      if(trajectory === 1){ concern += 8; drivers.push("Fluid signal trend: slow rise"); }
+      else if(trajectory === 2){ concern += 16; drivers.push("Fluid signal trend: consistent rise"); }
+      else if(trajectory === 3){ concern += 25; drivers.push("Fluid signal trend: rapid rise"); }
+      else { drivers.push("Fluid signal trend: stable"); }
 
-      if(timeRisk === 1){ score += 5; reasons.push("possible delayed progression"); }
-      if(timeRisk === 2){ score += 14; reasons.push("decompensation likely within days"); }
-      if(timeRisk === 3){ score += 24; reasons.push("decompensation may be near"); }
+      if(weight5 >= 6){ concern += 14; drivers.push(`Weight trend: +${weight5} lb over 5 days`); }
+      else if(weight5 >= 3){ concern += 9; drivers.push(`Weight trend: +${weight5} lb over 5 days`); }
+      else if(weight5 >= 1.5){ concern += 5; drivers.push(`Weight trend: +${weight5} lb over 5 days`); }
 
-      if(sbp < 95){ score += 12; reasons.push("low systolic pressure"); }
-      else if(sbp < 105){ score += 6; reasons.push("borderline blood pressure"); }
+      if(sbp < 95){ concern += 10; }
+      else if(sbp < 105){ concern += 5; }
 
-      if(hr >= 110){ score += 10; reasons.push("tachycardia"); }
-      else if(hr >= 95){ score += 5; reasons.push("mild tachycardia"); }
+      if(hr >= 110){ concern += 8; }
+      else if(hr >= 95){ concern += 4; }
 
-      if(spo2 <= 92){ score += 12; reasons.push("oxygen saturation decline"); }
-      else if(spo2 <= 95){ score += 5; reasons.push("mild oxygen saturation decline"); }
+      if(spo2 <= 92){ concern += 10; }
+      else if(spo2 <= 95){ concern += 4; }
 
-      if(na < 130){ score += 9; reasons.push("hyponatremia"); }
-      else if(na < 135){ score += 4; reasons.push("small sodium drop"); }
+      const symptoms = [];
+      if(isChecked("dyspnea")){ concern += 7; symptoms.push("Dyspnea present"); }
+      if(isChecked("edema")){ concern += 6; symptoms.push("Peripheral edema present"); }
+      if(isChecked("fatigue")){ concern += 3; symptoms.push("Fatigue present"); }
+      if(isChecked("crackles")){ concern += 7; symptoms.push("Crackles present"); }
 
-      const symptomWeights = {
-        orthopnea:[8, "early dyspnea symptoms"],
-        edema:[7, "peripheral edema"],
-        fatigue:[4, "reduced exercise tolerance"],
-        adherence:[4, "possible adherence issue"],
-        recentAcute:[8, "recent acute-care utilization"],
-        crackles:[9, "pulmonary congestion signs"]
-      };
+      concern = Math.max(0, Math.min(100, concern));
 
-      Object.entries(symptomWeights).forEach(([id, pair]) => {
-        if(checked(id)){ score += pair[0]; reasons.push(pair[1]); }
-      });
-
-      score = Math.max(0, Math.min(100, score));
-
-      let label = "Low current concern";
-      let pillClass = "low";
-      let summary = "Right now, the pattern does not strongly suggest early fluid worsening.";
-      let steps = [
-        "Continue routine monitoring and compare with the patient’s usual fluid trend.",
-        "Repeat the fluid signal if weight or breathing tolerance begins to change.",
-        "Use this mainly as a baseline tracking tool for now."
+      let pill = "Stable monitoring";
+      let title = "No early worsening detected";
+      let sub = "Fluid signal not clearly rising above baseline";
+      let windowText = "Likely worsening window: low current concern";
+      let stepItems = [
+        "Continue routine monitoring.",
+        "Use this as a baseline tracking view for now."
       ];
-      let subclinical = "Absent";
-      let trend = "Stable";
-      let horizon = ">10d";
 
-      if(score >= 33 && score < 67){
-        label = "Early congestion likely";
-        pillClass = "mod";
-        summary = "The fluid signal and short-term trends suggest early worsening congestion, even if the patient is not yet obviously unstable.";
-        steps = [
-          "Consider whether the patient is entering an early congestion phase despite only mild bedside changes.",
-          "Repeat the fluid signal within 24 to 72 hours and compare it with weight alone.",
-          "Reassess the diuretic plan, adherence, and symptom trend before the patient worsens further."
+      if(concern >= 35 && concern < 70){
+        pill = "Early congestion likely";
+        title = "Early Congestion Detected";
+        sub = "Fluid signal rising above baseline";
+        windowText = trajectory >= 2 ? "Likely worsening window: 5 to 7 days" : "Likely worsening window: more than 7 days";
+        stepItems = [
+          "Recheck the fluid signal within 24 to 72 hours.",
+          "Review the diuretic plan and symptom trend."
         ];
-        subclinical = "Present";
-        trend = trajectory >= 2 ? "Rising" : "Slow rise";
-        horizon = timeRisk === 2 ? "5–7d" : ">7d";
-      } else if(score >= 67){
-        label = "Escalation approaching";
-        pillClass = "high";
-        summary = "This pattern is concerning for meaningful fluid worsening and may be getting close to symptomatic decompensation.";
-        steps = [
-          "Prompt clinician review makes sense here because the fluid trend is no longer subtle.",
-          "Use a repeat fluid signal, vital signs, and clinical exam together to decide whether worsening is already underway.",
-          "This is the point where earlier monitoring may help prevent a hospitalization rather than just confirm one."
+      } else if(concern >= 70){
+        pill = "Escalation approaching";
+        title = "Escalation Approaching";
+        sub = "Fluid signal rising and clinical context is starting to support it";
+        windowText = trajectory === 3 ? "Likely worsening window: 48 to 96 hours" : "Likely worsening window: within 7 days";
+        stepItems = [
+          "Prompt clinician review makes sense here.",
+          "Recheck the fluid signal and review treatment sooner rather than later."
         ];
-        subclinical = "Advanced";
-        trend = trajectory === 3 ? "Rapid rise" : "High rise";
-        horizon = timeRisk === 3 ? "48–96h" : "≤7d";
       }
 
-      const leadReasons = reasons.slice(0,4).join(", ");
-      document.getElementById("riskPill").textContent = label;
-      document.getElementById("riskPill").className = "pill " + pillClass;
-      document.getElementById("scoreNum").textContent = score;
-      document.getElementById("scoreText").textContent = leadReasons ? "Main signals: " + leadReasons + "." : "No major trend signals detected.";
-      document.getElementById("summary").textContent = summary;
-      document.getElementById("subclinicalOut").textContent = subclinical;
-      document.getElementById("trendOut").textContent = trend;
-      document.getElementById("horizonOut").textContent = horizon;
-      document.getElementById("fillBar").style.width = score + "%";
-
-      const ul = document.getElementById("stepsList");
-      ul.innerHTML = "";
-      steps.forEach(s => {
+      const driverList = document.getElementById("driverList");
+      driverList.innerHTML = "";
+      const topDrivers = [];
+      if(drivers.length) topDrivers.push(drivers[0]);
+      if(weight5 >= 1.5) topDrivers.push(`Weight trend: +${weight5} lb over 5 days`);
+      if(symptoms.length) topDrivers.push(symptoms[0]);
+      if(topDrivers.length < 3 && drivers.length > 1) topDrivers.push(drivers[1]);
+      topDrivers.slice(0,3).forEach(item => {
         const li = document.createElement("li");
-        li.textContent = s;
-        ul.appendChild(li);
+        li.textContent = item;
+        driverList.appendChild(li);
       });
 
-      drawChart(score, ecw, trajectory, weight5);
+      const nextSteps = document.getElementById("nextSteps");
+      nextSteps.innerHTML = "";
+      stepItems.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        nextSteps.appendChild(li);
+      });
+
+      document.getElementById("resultPill").textContent = pill;
+      document.getElementById("statusTitle").textContent = title;
+      document.getElementById("statusSub").textContent = sub;
+      document.getElementById("statusWindow").textContent = windowText;
+
+      if(concern >= 70){
+        document.getElementById("statusBanner").style.background = "#FFF1F3";
+        document.getElementById("statusBanner").style.borderColor = "#EDC0C8";
+      } else if(concern >= 35){
+        document.getElementById("statusBanner").style.background = "#FFF6D8";
+        document.getElementById("statusBanner").style.borderColor = "#E8D38E";
+      } else {
+        document.getElementById("statusBanner").style.background = "#EEF8F0";
+        document.getElementById("statusBanner").style.borderColor = "#CBE6D2";
+      }
+
+      drawChart(concern, ecw, trajectory, weight5);
     }
 
-    function drawChart(score, ecw, trajectory, weight5){
+    function drawChart(concern, ecw, trajectory, weight5){
       const svg = document.getElementById("chart");
-      const width = 640, height = 280;
-      const m = {l:56, r:22, t:24, b:44};
+      const width = 760, height = 300;
+      const m = {l:54, r:26, t:24, b:40};
       const plotW = width - m.l - m.r;
       const plotH = height - m.t - m.b;
 
-      const ecwBase = Math.max(0, ecw - (trajectory >= 2 ? 5 : 3));
+      let ecwBase = Math.max(0, ecw - (trajectory === 3 ? 7 : trajectory === 2 ? 5 : trajectory === 1 ? 3 : 1));
+      let weightBase = Math.max(0, weight5 - (trajectory >= 2 ? 2.2 : 1.2));
+
       const ecwSeries = [];
-      const wtBase = Math.max(0, weight5 - 2.4);
-      const wtSeries = [];
-      const riskSeries = [];
+      const weightSeries = [];
+      const concernSeries = [];
 
       for(let i=0;i<7;i++){
-        let ecwVal = ecwBase + (ecw - ecwBase) * (i/6);
-        if(trajectory === 0) ecwVal = Math.max(0, ecw - 1 + (i%2)*0.2);
-        if(trajectory === 1) ecwVal = ecwBase + (ecw - ecwBase) * (i/8);
-        if(trajectory === 3) ecwVal = ecwBase + Math.pow(i/6, 1.7) * (ecw - ecwBase + 1.5);
+        let p = i / 6;
+        let e = ecwBase + (ecw - ecwBase) * p;
+        if(trajectory === 0) e = Math.max(0, ecw - 0.3 + ((i % 2) * 0.2));
+        if(trajectory === 1) e = ecwBase + (ecw - ecwBase) * (p * 0.8);
+        if(trajectory === 3) e = ecwBase + (ecw - ecwBase) * Math.pow(p, 1.6);
 
-        let wtVal = Math.max(0, wtBase + (weight5 - wtBase) * (i/6));
-        const riskVal = Math.max(0, Math.min(100, score - 18 + i * (score > 66 ? 4.8 : 3.3)));
+        let w = weightBase + (weight5 - weightBase) * p;
+        let c = Math.max(10, Math.min(100, concern - 16 + (i * (concern >= 70 ? 4.2 : 2.8))));
 
-        ecwSeries.push(Number(ecwVal.toFixed(1)));
-        wtSeries.push(Number(wtVal.toFixed(1)));
-        riskSeries.push(Number(riskVal.toFixed(0)));
+        ecwSeries.push(Number(e.toFixed(1)));
+        weightSeries.push(Number(w.toFixed(1)));
+        concernSeries.push(Number(c.toFixed(0)));
       }
 
-      const yMax = Math.max(14, ...ecwSeries, ...wtSeries, 10);
-      const x = i => m.l + (plotW * i / 6);
+      const yMax = Math.max(14, ...ecwSeries, ...weightSeries);
+      const x = i => m.l + plotW * i / 6;
       const yFluid = v => m.t + plotH - (v / yMax) * plotH;
-      const yRisk = v => m.t + plotH - (v / 100) * plotH;
+      const yConcern = v => m.t + plotH - (v / 100) * plotH;
 
-      function path(series, fnY){
-        return series.map((v,i) => (i===0 ? "M" : "L") + x(i) + " " + fnY(v)).join(" ");
+      function path(series, yFn){
+        return series.map((v,i) => `${i===0?"M":"L"} ${x(i)} ${yFn(v)}`).join(" ");
       }
 
       let grid = "";
       for(let i=0;i<5;i++){
-        const yy = m.t + (plotH * i / 4);
-        grid += `<line x1="${m.l}" y1="${yy}" x2="${width-m.r}" y2="${yy}" stroke="#e4e9f2" stroke-width="1"/>`;
+        const yy = m.t + plotH * i / 4;
+        grid += `<line x1="${m.l}" y1="${yy}" x2="${width-m.r}" y2="${yy}" stroke="#E8EDF5" stroke-width="1"/>`;
       }
       for(let i=0;i<7;i++){
-        grid += `<line x1="${x(i)}" y1="${m.t}" x2="${x(i)}" y2="${height-m.b}" stroke="#f0f3f9" stroke-width="1"/>`;
+        const xx = x(i);
+        grid += `<line x1="${xx}" y1="${m.t}" x2="${xx}" y2="${height-m.b}" stroke="#F0F3F8" stroke-width="1"/>`;
       }
 
-      let labels = "";
-      for(let i=0;i<7;i++){
-        labels += `<text x="${x(i)}" y="${height-16}" text-anchor="middle" font-size="12" fill="#5a6880">${days[i]}</text>`;
-      }
+      const labels = days.map((d,i) => `<text x="${x(i)}" y="${height-14}" text-anchor="middle" font-size="14" fill="#5A6880">${d}</text>`).join("");
 
-      let yLabels = "";
-      [0, Math.round(yMax/3), Math.round(2*yMax/3), Math.round(yMax)].forEach(val => {
-        yLabels += `<text x="16" y="${yFluid(val)+4}" font-size="12" fill="#5a6880">${val}</text>`;
-      });
-
-      function circles(series, fnY, color){
-        return series.map((v,i) => `<circle cx="${x(i)}" cy="${fnY(v)}" r="4" fill="${color}" stroke="#fff" stroke-width="2"/>`).join("");
+      function points(series, yFn, color){
+        return series.map((v,i) => `<circle cx="${x(i)}" cy="${yFn(v)}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>`).join("");
       }
 
       svg.innerHTML = `
-        <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="#ffffff"/>
+        <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="#FBFCFF"/>
         ${grid}
-        <line x1="${m.l}" y1="${height-m.b}" x2="${width-m.r}" y2="${height-m.b}" stroke="#cfd8e6" stroke-width="1.5"/>
-        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${height-m.b}" stroke="#cfd8e6" stroke-width="1.5"/>
-        <path d="${path(riskSeries, yRisk)}" fill="none" stroke="#b87400" stroke-width="3" stroke-dasharray="6 5"/>
-        <path d="${path(wtSeries, yFluid)}" fill="none" stroke="#0C234B" stroke-width="3"/>
-        <path d="${path(ecwSeries, yFluid)}" fill="none" stroke="#AB0520" stroke-width="4"/>
-        ${circles(riskSeries, yRisk, "#b87400")}
-        ${circles(wtSeries, yFluid, "#0C234B")}
-        ${circles(ecwSeries, yFluid, "#AB0520")}
+        <line x1="${m.l}" y1="${height-m.b}" x2="${width-m.r}" y2="${height-m.b}" stroke="#CFD8E6" stroke-width="1.5"/>
+        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${height-m.b}" stroke="#CFD8E6" stroke-width="1.5"/>
+        <path d="${path(concernSeries, yConcern)}" fill="none" stroke="#C58B00" stroke-width="4"/>
+        <path d="${path(weightSeries, yFluid)}" fill="none" stroke="#0C234B" stroke-width="5"/>
+        <path d="${path(ecwSeries, yFluid)}" fill="none" stroke="#AB0520" stroke-width="6"/>
+        ${points(concernSeries, yConcern, "#C58B00")}
+        ${points(weightSeries, yFluid, "#0C234B")}
+        ${points(ecwSeries, yFluid, "#AB0520")}
         ${labels}
-        ${yLabels}
-        <text x="${width-100}" y="28" font-size="12" fill="#5a6880">trend over 7 days</text>
       `;
-
-      const note = ecwSeries[6] - ecwSeries[0] > wtSeries[6] - wtSeries[0]
-        ? "Across the past week, the extracellular fluid signal rises more clearly than weight alone, which is exactly the type of earlier congestion pattern this concept is meant to detect."
-        : "Weight and extracellular fluid signals are rising together, suggesting a less subtle but still useful congestion-tracking pattern.";
-      document.getElementById("chartNote").textContent = note;
     }
 
-    function setChecks(obj){
-      ["orthopnea","edema","fatigue","adherence","recentAcute","crackles"].forEach(id => {
-        document.getElementById(id).checked = !!obj[id];
-      });
+    function setScenario(data){
+      document.getElementById("ecw").value = data.ecw;
+      document.getElementById("trajectory").value = data.trajectory;
+      document.getElementById("weight5").value = data.weight5;
+      document.getElementById("sbp").value = data.sbp;
+      document.getElementById("hr").value = data.hr;
+      document.getElementById("spo2").value = data.spo2;
+      document.getElementById("dyspnea").checked = data.dyspnea;
+      document.getElementById("edema").checked = data.edema;
+      document.getElementById("fatigue").checked = data.fatigue;
+      document.getElementById("crackles").checked = data.crackles;
+      runModel();
     }
 
     function loadScenario(type){
-      if(type === "low"){
-        document.getElementById("ecw").value = 1.5;
-        document.getElementById("trajectory").value = 0;
-        document.getElementById("weight5").value = 0.8;
-        document.getElementById("timeRisk").value = 0;
-        document.getElementById("sbp").value = 122;
-        document.getElementById("hr").value = 78;
-        document.getElementById("spo2").value = 97;
-        document.getElementById("na").value = 138;
-        setChecks({orthopnea:false, edema:false, fatigue:false, adherence:false, recentAcute:false, crackles:false});
+      if(type === "stable"){
+        setScenario({ecw:2, trajectory:0, weight5:0.8, sbp:122, hr:78, spo2:97, dyspnea:false, edema:false, fatigue:false, crackles:false});
       } else if(type === "high"){
-        document.getElementById("ecw").value = 13;
-        document.getElementById("trajectory").value = 3;
-        document.getElementById("weight5").value = 7.8;
-        document.getElementById("timeRisk").value = 3;
-        document.getElementById("sbp").value = 92;
-        document.getElementById("hr").value = 114;
-        document.getElementById("spo2").value = 91;
-        document.getElementById("na").value = 129;
-        setChecks({orthopnea:true, edema:true, fatigue:true, adherence:true, recentAcute:true, crackles:true});
+        setScenario({ecw:13, trajectory:3, weight5:7.2, sbp:94, hr:112, spo2:91, dyspnea:true, edema:true, fatigue:true, crackles:true});
       } else {
-        document.getElementById("ecw").value = 8;
-        document.getElementById("trajectory").value = 2;
-        document.getElementById("weight5").value = 3.5;
-        document.getElementById("timeRisk").value = 2;
-        document.getElementById("sbp").value = 108;
-        document.getElementById("hr").value = 96;
-        document.getElementById("spo2").value = 95;
-        document.getElementById("na").value = 134;
-        setChecks({orthopnea:true, edema:true, fatigue:true, adherence:false, recentAcute:false, crackles:false});
+        setScenario({ecw:8, trajectory:2, weight5:3.5, sbp:108, hr:96, spo2:95, dyspnea:true, edema:true, fatigue:false, crackles:false});
       }
-      runModel();
     }
 
     runModel();
