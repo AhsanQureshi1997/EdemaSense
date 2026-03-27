@@ -64,44 +64,6 @@
     }
 
 
-
-    .workflow-steps{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
-    }
-    .step-card{
-      background:#ffffff;
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:14px 16px;
-      box-shadow:0 6px 18px rgba(16,35,70,.04);
-    }
-    .step-num{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;
-      height:28px;
-      border-radius:999px;
-      background:var(--ua-blue);
-      color:#fff;
-      font-weight:bold;
-      font-size:14px;
-      margin-bottom:8px;
-    }
-    .step-title{
-      font-size:16px;
-      font-weight:bold;
-      margin-bottom:6px;
-    }
-    .step-copy{
-      font-size:13px;
-      line-height:1.5;
-      color:var(--muted);
-    }
-
     .top-summary{
       display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:20px;
     }
@@ -191,7 +153,7 @@
 
     @media (max-width: 980px){
       .top-grid, .bottom-grid{grid-template-columns:1fr}
-      .workflow-steps, .two-col, .checks, .mini-grid{grid-template-columns:1fr}
+      .two-col, .checks, .mini-grid{grid-template-columns:1fr}
       h1{font-size:30px}
     }
   </style>
@@ -210,21 +172,18 @@
     </div>
 
 
-    <div class="workflow-steps">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-title">Enter the fluid signal</div>
-        <div class="step-copy">Start with the device-based fluid reading and how fast it has been rising.</div>
+    <div class="top-summary">
+      <div class="mini">
+        <div class="k">Best first step</div>
+        <div class="v" style="font-size:18px;">Start with the fluid signal</div>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-title">Add quick clinical context</div>
-        <div class="step-copy">Use only a few symptoms and basic vital signs to keep the input fast.</div>
+      <div class="mini">
+        <div class="k">Fastest read</div>
+        <div class="v" style="font-size:18px;">Check the result card</div>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-title">Read the result and trend</div>
-        <div class="step-copy">Look at the result card first, then use the trend chart to see how fluid buildup is changing over time.</div>
+      <div class="mini">
+        <div class="k">Best visual</div>
+        <div class="v" style="font-size:18px;">Use the trend chart</div>
       </div>
     </div>
 
@@ -232,12 +191,12 @@
       <div class="card">
         <h2>Patient snapshot</h2>
         <div class="sub">
-          This tool is built around one question: <strong>is fluid building up earlier than we would usually catch it?</strong> Keep the input short, then read the result card and chart.
+          This version is built around one main question: <strong>is fluid building up earlier than we would usually catch it?</strong> Start with the fluid signal, then add a few simple symptoms and vital signs.
         </div>
 
         <div class="section">
           <h3>1. Main fluid signal</h3>
-          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Enter the fluid reading first. The rest of the page adds quick context.</div>
+          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Enter the device-based fluid signal first. The rest of the page adds context.</div>
           <div class="two-col">
             <div class="field">
               <label>Fluid signal above baseline (%)</label>
@@ -255,11 +214,21 @@
             <div class="field">
               <label>Weight change in 5 days (lb)</label>
               <input id="weight5" type="number" value="3.5" step="0.1" />
-            </div>          </div>
+            </div>
+            <div class="field">
+              <label>If the trend continues, likely time to worsening</label>
+              <select id="timeRisk">
+                <option value="0">Low concern / not estimated</option>
+                <option value="1">Likely &gt; 10 days</option>
+                <option value="2" selected>Likely 5 to 7 days</option>
+                <option value="3">Likely 48 to 96 hours</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="section">
-          <h3>2. Quick clinical context</h3>
+          <h3>2. Symptoms and basic vitals</h3>
           <div class="two-col">
             <div class="field">
               <label>Systolic blood pressure</label>
@@ -272,15 +241,24 @@
             <div class="field">
               <label>Oxygen saturation (%)</label>
               <input id="spo2" type="number" value="95" />
-            </div>          </div>
-          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Keep this short. Only check what is clearly present.</div>
-          <div class="checks">
+            </div>
+            <div class="field">
+              <label>Sodium (mEq/L)</label>
+              <input id="na" type="number" value="134" />
+            </div>
+          </div>
+          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Keep this part short. Only check what is clearly present.</div>
+          <div class="section" style="margin-top:14px; padding-top:14px;">
+            <h3 style="margin-bottom:8px;">Symptoms you can add</h3>
+            <div class="sub" style="margin:0 0 12px; font-size:13px;">These are optional and should act as supporting context, not the main signal.</div>
+            <div class="checks">
             <label class="check"><input id="orthopnea" type="checkbox" checked>Orthopnea or increasing exertional dyspnea</label>
             <label class="check"><input id="edema" type="checkbox" checked>Peripheral edema</label>
             <label class="check"><input id="fatigue" type="checkbox" checked>Reduced exercise tolerance</label>
             <label class="check"><input id="adherence" type="checkbox">Medication or dietary adherence uncertainty</label>
             <label class="check"><input id="recentAcute" type="checkbox">Recent ED visit or HF hospitalization</label>
             <label class="check"><input id="crackles" type="checkbox">Pulmonary crackles or clear pulmonary congestion signs</label>
+            </div>
           </div>
         </div>
 
@@ -325,7 +303,7 @@
             <div id="trendOut" class="v">Rising</div>
           </div>
           <div class="mini">
-            <div class="k">Worsening window</div>
+            <div class="k">Likely horizon</div>
             <div id="horizonOut" class="v">5–7d</div>
           </div>
         </div>
@@ -350,17 +328,17 @@
       </div>
 
       <div class="card">
-        <h2>How to use this page</h2>
+        <h2>What this tool is for</h2>
         <div class="research-box">
           This prototype is meant to make subtle fluid changes easier to see before the patient looks obviously worse.
         </div>
         <div class="section">
-          <h3>What it helps with</h3>
+          <h3>Best use</h3>
           <ul>
-            <li>Track the fluid signal next to short-term weight change.</li>
+            <li>Track fluid-signal change next to short-term weight change.</li>
             <li>Flag possible early congestion before the patient becomes clearly unstable.</li>
             <li>Help decide how closely to monitor and when to follow up.</li>
-            <li>Show change over time instead of only showing a one-time score.</li>
+            <li>Show change over time instead of only giving a one-time score.</li>
           </ul>
         </div>
         <div class="callout">
@@ -386,9 +364,11 @@
       const ecw = num("ecw");
       const trajectory = num("trajectory");
       const weight5 = num("weight5");
+      const timeRisk = num("timeRisk");
       const sbp = num("sbp");
       const hr = num("hr");
       const spo2 = num("spo2");
+      const na = num("na");
 
       if(ecw >= 12){ score += 30; reasons.push("marked extracellular fluid increase"); }
       else if(ecw >= 8){ score += 22; reasons.push("clear extracellular fluid rise"); }
@@ -403,6 +383,10 @@
       else if(weight5 >= 3){ score += 9; reasons.push("early weight gain"); }
       else if(weight5 >= 1.5){ score += 4; reasons.push("small weight change"); }
 
+      if(timeRisk === 1){ score += 5; reasons.push("possible delayed progression"); }
+      if(timeRisk === 2){ score += 14; reasons.push("decompensation likely within days"); }
+      if(timeRisk === 3){ score += 24; reasons.push("decompensation may be near"); }
+
       if(sbp < 95){ score += 12; reasons.push("low systolic pressure"); }
       else if(sbp < 105){ score += 6; reasons.push("borderline blood pressure"); }
 
@@ -411,6 +395,9 @@
 
       if(spo2 <= 92){ score += 12; reasons.push("oxygen saturation decline"); }
       else if(spo2 <= 95){ score += 5; reasons.push("mild oxygen saturation decline"); }
+
+      if(na < 130){ score += 9; reasons.push("hyponatremia"); }
+      else if(na < 135){ score += 4; reasons.push("small sodium drop"); }
 
       const symptomWeights = {
         orthopnea:[8, "early dyspnea symptoms"],
@@ -427,7 +414,7 @@
 
       score = Math.max(0, Math.min(100, score));
 
-      let label = "Watch current concern";
+      let label = "Low current concern";
       let pillClass = "low";
       let summary = "Right now, the pattern does not strongly suggest early fluid worsening.";
       let steps = [
@@ -437,7 +424,7 @@
       ];
       let subclinical = "Absent";
       let trend = "Stable";
-      let horizon = "Watch";
+      let horizon = ">10d";
 
       if(score >= 33 && score < 67){
         label = "Early congestion likely";
@@ -450,7 +437,7 @@
         ];
         subclinical = "Present";
         trend = trajectory >= 2 ? "Rising" : "Slow rise";
-        horizon = trajectory >= 2 ? "5–7d" : ">7d";
+        horizon = timeRisk === 2 ? "5–7d" : ">7d";
       } else if(score >= 67){
         label = "Escalation approaching";
         pillClass = "high";
@@ -462,7 +449,7 @@
         ];
         subclinical = "Advanced";
         trend = trajectory === 3 ? "Rapid rise" : "High rise";
-        horizon = trajectory === 3 ? "48–96h" : "≤7d";
+        horizon = timeRisk === 3 ? "48–96h" : "≤7d";
       }
 
       const leadReasons = reasons.slice(0,4).join(", ");
@@ -579,25 +566,31 @@
         document.getElementById("ecw").value = 1.5;
         document.getElementById("trajectory").value = 0;
         document.getElementById("weight5").value = 0.8;
+        document.getElementById("timeRisk").value = 0;
         document.getElementById("sbp").value = 122;
         document.getElementById("hr").value = 78;
         document.getElementById("spo2").value = 97;
+        document.getElementById("na").value = 138;
         setChecks({orthopnea:false, edema:false, fatigue:false, adherence:false, recentAcute:false, crackles:false});
       } else if(type === "high"){
         document.getElementById("ecw").value = 13;
         document.getElementById("trajectory").value = 3;
         document.getElementById("weight5").value = 7.8;
+        document.getElementById("timeRisk").value = 3;
         document.getElementById("sbp").value = 92;
         document.getElementById("hr").value = 114;
         document.getElementById("spo2").value = 91;
+        document.getElementById("na").value = 129;
         setChecks({orthopnea:true, edema:true, fatigue:true, adherence:true, recentAcute:true, crackles:true});
       } else {
         document.getElementById("ecw").value = 8;
         document.getElementById("trajectory").value = 2;
         document.getElementById("weight5").value = 3.5;
+        document.getElementById("timeRisk").value = 2;
         document.getElementById("sbp").value = 108;
         document.getElementById("hr").value = 96;
         document.getElementById("spo2").value = 95;
+        document.getElementById("na").value = 134;
         setChecks({orthopnea:true, edema:true, fatigue:true, adherence:false, recentAcute:false, crackles:false});
       }
       runModel();
