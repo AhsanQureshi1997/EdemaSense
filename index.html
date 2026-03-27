@@ -22,9 +22,9 @@
     }
     *{box-sizing:border-box}
     body{
-      transform: scale(0.8);
-      transform-origin: top left;
-      width:125%;
+      
+      
+      
       margin:0;
       font-family: Arial, Helvetica, sans-serif;
       background:var(--bg);
@@ -291,32 +291,121 @@
       font-size:18px;
       margin-bottom:12px;
     }
-    .legend{
-      display:flex;
-      gap:22px;
-      flex-wrap:wrap;
-      color:var(--muted);
-      font-size:16px;
-      margin-bottom:12px;
-    }
-    .legend-item{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:999px;
-      display:inline-block;
-    }
-    svg{
-      width:100%;
-      height:auto;
-      display:block;
+
+    
+    .trajectory-wrap{
+      margin-top:10px;
       background:#FBFCFF;
       border:1px solid var(--line);
-      border-radius:18px;
+      border-radius:20px;
+      padding:20px;
+    }
+    .trajectory-labels{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      font-size:15px;
+      color:var(--muted);
+      margin-bottom:10px;
+      text-align:center;
+    }
+    .trajectory-bar{
+      position:relative;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      align-items:center;
+      margin-top:2px;
+    }
+    .trajectory-seg{
+      height:24px;
+      border-radius:999px;
+      border:1px solid var(--line);
+    }
+    .seg1{background:#EEF8F0; border-color:#CBE6D2;}
+    .seg2{background:#FFF6D8; border-color:#E8D38E;}
+    .seg3{background:#FFF0E0; border-color:#EBC99A;}
+    .seg4{background:#FFF1F3; border-color:#EDC0C8;}
+    .trajectory-marker{
+      position:absolute;
+      top:-10px;
+      width:0;
+      height:0;
+      border-left:12px solid transparent;
+      border-right:12px solid transparent;
+      border-top:18px solid var(--ua-blue);
+      left:0%;
+      transform:translateX(-50%);
+      transition:left .25s ease;
+    }
+    .trajectory-summary{
+      margin-top:16px;
+      font-size:18px;
+      color:var(--text);
+      line-height:1.45;
+    }
+    .comparison-card{
+      margin-top:18px;
+      background:#FBFCFF;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:20px;
+    }
+    .comparison-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:6px;
+    }
+    .comparison-sub{
+      font-size:17px;
+      color:var(--muted);
+      line-height:1.45;
+      margin-bottom:14px;
+    }
+    .comparison-grid{
+      display:grid;
+      gap:14px;
+    }
+    .comp-row{
+      display:grid;
+      grid-template-columns:130px 1fr 140px;
+      gap:14px;
+      align-items:center;
+    }
+    .comp-label{
+      font-size:18px;
+      font-weight:bold;
+      color:var(--text);
+    }
+    .comp-track{
+      height:18px;
+      background:#EEF2F8;
+      border:1px solid var(--line);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .comp-fill{
+      height:100%;
+      border-radius:999px;
+      width:0%;
+      transition:width .25s ease;
+    }
+    .fluid-fill{background:var(--ua-red);}
+    .weight-fill{background:var(--ua-blue);}
+    .comp-text{
+      font-size:17px;
+      color:var(--text);
+      text-align:right;
+    }
+    .comparison-insight{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:#F9FBFE;
+      border:1px solid var(--line);
+      font-size:18px;
+      line-height:1.45;
+      color:var(--text);
     }
 
     .next-step{
@@ -353,8 +442,8 @@
     <div class="hero">
       <div class="eyebrow"><span class="eyebrow-badge"></span> UACOMP-inspired prototype interface</div>
       <h1>EdemaSense: Early Congestion Detection</h1>
-      <p>Uses a device-derived fluid signal to detect early congestion before symptoms worsen.</p>
-      <div class="hero-note">Concept demo only. Not a validated model, not a medical device, and not for patient care.</div>
+      <p>Detects early congestion using a device-derived fluid signal.</p>
+      <div class="hero-note">Prototype for research use only. Not for clinical decision-making.</div>
     </div>
 
     <div class="top-cards">
@@ -374,42 +463,8 @@
 
     <div class="main-grid">
       <div class="panel">
-        <div class="results-head">
-          <h2>Current status</h2>
-          <div id="resultPill" class="pill">Escalation approaching</div>
-        </div>
-
-        <div id="statusBanner" class="status-banner">
-          <div id="statusTitle" class="status-title">Early Congestion Detected</div>
-          <div id="statusSub" class="status-sub">Fluid signal rising above baseline</div>
-          <div id="statusWindow" class="status-window">Likely worsening window: 5 to 7 days</div>
-        </div>
-
-        <div class="driver-card">
-          <div class="driver-title">Why this was flagged</div>
-          <ul id="driverList" class="driver-list"></ul>
-        </div>
-
-        <div class="chart-panel">
-          <div class="chart-title">Trend view</div>
-          <div class="chart-sub">Read this as a monitoring view, not just a one-time score.</div>
-          <div class="legend">
-            <span class="legend-item"><span class="dot" style="background:#AB0520"></span>Fluid signal</span>
-            <span class="legend-item"><span class="dot" style="background:#0C234B"></span>Weight</span>
-            <span class="legend-item"><span class="dot" style="background:#C58B00"></span>Overall concern</span>
-          </div>
-          <svg id="chart" viewBox="0 0 760 300" aria-label="trend chart"></svg>
-        </div>
-
-        <div class="next-step">
-          <h3>Next step</h3>
-          <ul id="nextSteps"></ul>
-        </div>
-      </div>
-
-      <div class="panel">
         <h2>Quick patient check</h2>
-        <div class="sub">The fluid signal leads this page. Symptoms and vitals are optional supporting context.</div>
+        <div class="sub">Start with the fluid signal. Add context if needed.</div>
 
         <div class="section">
           <h3>1. Enter the fluid signal</h3>
@@ -417,15 +472,15 @@
           <div class="field-grid">
             <div class="field">
               <label>Fluid signal above baseline (%)</label>
-              <input id="ecw" type="number" value="8" />
+              <input id="ecw" type="number"  />
             </div>
             <div class="field">
               <label>Fluid signal trend</label>
               <select id="trajectory">
-                <option value="0">Stable</option>
-                <option value="1">Slow rise</option>
-                <option value="2" selected>Consistent rise</option>
-                <option value="3">Rapid rise</option>
+                <option >Stable</option>
+                <option >Slow rise</option>
+                <option  selected>Consistent rise</option>
+                <option >Rapid rise</option>
               </select>
             </div>
           </div>
@@ -437,19 +492,19 @@
           <div class="field-grid">
             <div class="field">
               <label>Weight change in 5 days (lb)</label>
-              <input id="weight5" type="number" step="0.1" value="3.5" />
+              <input id="weight5" type="number" step="0.1"  />
             </div>
             <div class="field">
               <label>Systolic blood pressure</label>
-              <input id="sbp" type="number" value="108" />
+              <input id="sbp" type="number"  />
             </div>
             <div class="field">
               <label>Heart rate</label>
-              <input id="hr" type="number" value="96" />
+              <input id="hr" type="number"  />
             </div>
             <div class="field">
               <label>Oxygen saturation (%)</label>
-              <input id="spo2" type="number" value="95" />
+              <input id="spo2" type="number"  />
             </div>
           </div>
 
@@ -465,8 +520,9 @@
           </div>
         </div>
 
+        <div style="margin-top:6px; color:var(--muted); font-size:16px;">Enter data above, then generate result.</div>
         <div class="actions">
-          <button class="primary" onclick="runModel()">Update results</button>
+          <button class="primary" onclick="runModel()">Generate result</button>
           <button class="secondary" onclick="loadScenario('stable')">Example: stable patient</button>
           <button class="secondary" onclick="loadScenario('early')">Example: early congestion</button>
           <button class="secondary" onclick="loadScenario('high')">Example: high concern</button>
@@ -534,9 +590,9 @@
 
       if(concern >= 35 && concern < 70){
         pill = "Early congestion likely";
-        title = "Early Congestion Detected";
-        sub = "Fluid signal rising above baseline";
-        windowText = trajectory >= 2 ? "Likely worsening window: 5 to 7 days" : "Likely worsening window: more than 7 days";
+        title = "No data yet";
+        sub = "Enter fluid signal to begin";
+        windowText = trajectory >= 2 ? "" : "Likely worsening window: more than 7 days";
         stepItems = [
           "Recheck the fluid signal within 24 to 72 hours.",
           "Review the diuretic plan and symptom trend."
@@ -589,76 +645,43 @@
         document.getElementById("statusBanner").style.borderColor = "#CBE6D2";
       }
 
-      drawChart(concern, ecw, trajectory, weight5);
+      updateVisuals(concern, ecw, trajectory, weight5);
     }
 
-    function drawChart(concern, ecw, trajectory, weight5){
-      const svg = document.getElementById("chart");
-      const width = 760, height = 300;
-      const m = {l:54, r:26, t:24, b:40};
-      const plotW = width - m.l - m.r;
-      const plotH = height - m.t - m.b;
+    function updateVisuals(concern, ecw, trajectory, weight5){
+      const marker = document.getElementById("trajectoryMarker");
+      const summary = document.getElementById("trajectorySummary");
+      const fluidBar = document.getElementById("fluidBar");
+      const weightBar = document.getElementById("weightBar");
+      const fluidText = document.getElementById("fluidText");
+      const weightText = document.getElementById("weightText");
+      const insight = document.getElementById("comparisonInsight");
 
-      let ecwBase = Math.max(0, ecw - (trajectory === 3 ? 7 : trajectory === 2 ? 5 : trajectory === 1 ? 3 : 1));
-      let weightBase = Math.max(0, weight5 - (trajectory >= 2 ? 2.2 : 1.2));
+      const markerPct = Math.max(2, Math.min(98, concern));
+      marker.style.left = markerPct + "%";
 
-      const ecwSeries = [];
-      const weightSeries = [];
-      const concernSeries = [];
+      let trajText = "Trajectory not available yet.";
+      if(concern < 35) trajText = "The patient currently sits in the stable range, with no strong sign of early worsening.";
+      else if(concern < 70) trajText = "The patient appears to be in an early congestion phase, where fluid buildup may be starting before obvious deterioration.";
+      else trajText = "The patient appears farther along the congestion pathway, with worsening risk becoming harder to ignore.";
+      summary.textContent = trajText;
 
-      for(let i=0;i<7;i++){
-        let p = i / 6;
-        let e = ecwBase + (ecw - ecwBase) * p;
-        if(trajectory === 0) e = Math.max(0, ecw - 0.3 + ((i % 2) * 0.2));
-        if(trajectory === 1) e = ecwBase + (ecw - ecwBase) * (p * 0.8);
-        if(trajectory === 3) e = ecwBase + (ecw - ecwBase) * Math.pow(p, 1.6);
+      const fluidPct = Math.max(0, Math.min(100, (ecw / 14) * 100));
+      const weightPct = Math.max(0, Math.min(100, (weight5 / 8) * 100));
+      fluidBar.style.width = fluidPct + "%";
+      weightBar.style.width = weightPct + "%";
+      fluidText.textContent = ecw ? `+${ecw}% vs baseline` : "No data";
+      weightText.textContent = weight5 ? `+${weight5} lb in 5 days` : "No data";
 
-        let w = weightBase + (weight5 - weightBase) * p;
-        let c = Math.max(10, Math.min(100, concern - 16 + (i * (concern >= 70 ? 4.2 : 2.8))));
-
-        ecwSeries.push(Number(e.toFixed(1)));
-        weightSeries.push(Number(w.toFixed(1)));
-        concernSeries.push(Number(c.toFixed(0)));
+      if(!ecw && !weight5){
+        insight.textContent = "Enter data to compare the fluid signal with weight.";
+      } else if(ecw >= 5 && weight5 < 3){
+        insight.textContent = "Fluid signal is rising more clearly than weight. This supports the idea of earlier congestion detection before weight becomes dramatic.";
+      } else if(ecw >= 5 && weight5 >= 3){
+        insight.textContent = "Fluid signal and weight are both rising. This suggests congestion is becoming easier to see clinically as well.";
+      } else {
+        insight.textContent = "Weight and fluid signal are not showing a strongly concerning divergence right now.";
       }
-
-      const yMax = Math.max(14, ...ecwSeries, ...weightSeries);
-      const x = i => m.l + plotW * i / 6;
-      const yFluid = v => m.t + plotH - (v / yMax) * plotH;
-      const yConcern = v => m.t + plotH - (v / 100) * plotH;
-
-      function path(series, yFn){
-        return series.map((v,i) => `${i===0?"M":"L"} ${x(i)} ${yFn(v)}`).join(" ");
-      }
-
-      let grid = "";
-      for(let i=0;i<5;i++){
-        const yy = m.t + plotH * i / 4;
-        grid += `<line x1="${m.l}" y1="${yy}" x2="${width-m.r}" y2="${yy}" stroke="#E8EDF5" stroke-width="1"/>`;
-      }
-      for(let i=0;i<7;i++){
-        const xx = x(i);
-        grid += `<line x1="${xx}" y1="${m.t}" x2="${xx}" y2="${height-m.b}" stroke="#F0F3F8" stroke-width="1"/>`;
-      }
-
-      const labels = days.map((d,i) => `<text x="${x(i)}" y="${height-14}" text-anchor="middle" font-size="14" fill="#5A6880">${d}</text>`).join("");
-
-      function points(series, yFn, color){
-        return series.map((v,i) => `<circle cx="${x(i)}" cy="${yFn(v)}" r="5" fill="${color}" stroke="#fff" stroke-width="2"/>`).join("");
-      }
-
-      svg.innerHTML = `
-        <rect x="0" y="0" width="${width}" height="${height}" rx="16" fill="#FBFCFF"/>
-        ${grid}
-        <line x1="${m.l}" y1="${height-m.b}" x2="${width-m.r}" y2="${height-m.b}" stroke="#CFD8E6" stroke-width="1.5"/>
-        <line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${height-m.b}" stroke="#CFD8E6" stroke-width="1.5"/>
-        <path d="${path(concernSeries, yConcern)}" fill="none" stroke="#C58B00" stroke-width="4"/>
-        <path d="${path(weightSeries, yFluid)}" fill="none" stroke="#0C234B" stroke-width="5"/>
-        <path d="${path(ecwSeries, yFluid)}" fill="none" stroke="#AB0520" stroke-width="6"/>
-        ${points(concernSeries, yConcern, "#C58B00")}
-        ${points(weightSeries, yFluid, "#0C234B")}
-        ${points(ecwSeries, yFluid, "#AB0520")}
-        ${labels}
-      `;
     }
 
     function setScenario(data){
@@ -672,7 +695,7 @@
       document.getElementById("edema").checked = data.edema;
       document.getElementById("fatigue").checked = data.fatigue;
       document.getElementById("crackles").checked = data.crackles;
-      runModel();
+      
     }
 
     function loadScenario(type){
@@ -685,7 +708,73 @@
       }
     }
 
-    runModel();
+    
   </script>
 </body>
-</html>
+</html><div class="panel">
+        <div class="results-head">
+          <h2>Current status</h2>
+          <div id="resultPill" class="pill">Escalation approaching</div>
+        </div>
+
+        <div id="statusBanner" class="status-banner">
+          <div id="statusTitle" class="status-title">No data yet</div>
+          <div id="statusSub" class="status-sub">Enter fluid signal to begin</div>
+          <div id="statusWindow" class="status-window"></div>
+        </div>
+
+        <div class="driver-card">
+          <div class="driver-title">Why this was flagged</div>
+          <ul id="driverList" class="driver-list"><li>No drivers yet</li></ul>
+        </div>
+
+        
+        <div class="chart-panel">
+          <div class="chart-title">Congestion trajectory</div>
+          <div class="chart-sub">This view is meant to answer one question quickly: how far along the patient is on the path from stable to decompensation.</div>
+
+          <div class="trajectory-wrap">
+            <div class="trajectory-labels">
+              <span>Stable</span>
+              <span>Early congestion</span>
+              <span>Worsening</span>
+              <span>Imminent</span>
+            </div>
+            <div class="trajectory-bar">
+              <div class="trajectory-seg seg1"></div>
+              <div class="trajectory-seg seg2"></div>
+              <div class="trajectory-seg seg3"></div>
+              <div class="trajectory-seg seg4"></div>
+              <div id="trajectoryMarker" class="trajectory-marker"></div>
+            </div>
+            <div id="trajectorySummary" class="trajectory-summary">Enter patient data to show trajectory.</div>
+          </div>
+
+          <div class="comparison-card">
+            <div class="comparison-title">Signal compared with weight</div>
+            <div class="comparison-sub">This makes the main idea visible: the device-derived fluid signal may rise before weight becomes dramatic.</div>
+
+            <div class="comparison-grid">
+              <div class="comp-row">
+                <div class="comp-label">Fluid signal</div>
+                <div class="comp-track"><div id="fluidBar" class="comp-fill fluid-fill" style="width:0%"></div></div>
+                <div id="fluidText" class="comp-text">No data</div>
+              </div>
+              <div class="comp-row">
+                <div class="comp-label">Weight</div>
+                <div class="comp-track"><div id="weightBar" class="comp-fill weight-fill" style="width:0%"></div></div>
+                <div id="weightText" class="comp-text">No data</div>
+              </div>
+            </div>
+
+            <div id="comparisonInsight" class="comparison-insight">Enter data to compare the fluid signal with weight.</div>
+          </div>
+        </div>
+
+        <div class="next-step">
+          <h3>Next step</h3>
+          <ul id="nextSteps"><li>No recommendations yet</li></ul>
+        </div>
+      </div>
+
+      
