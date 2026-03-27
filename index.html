@@ -63,6 +63,52 @@
       background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.18); font-size:13px;
     }
 
+
+
+    .workflow-steps{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+    .step-card{
+      background:#ffffff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 16px;
+      box-shadow:0 6px 18px rgba(16,35,70,.04);
+    }
+    .step-num{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      background:var(--ua-blue);
+      color:#fff;
+      font-weight:bold;
+      font-size:14px;
+      margin-bottom:8px;
+    }
+    .step-title{
+      font-size:16px;
+      font-weight:bold;
+      margin-bottom:6px;
+    }
+    .step-copy{
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
+    }
+
+    .top-summary{
+      display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:20px;
+    }
+    .top-summary .mini{
+      background:#ffffff; border:1px solid var(--line); border-radius:16px; padding:14px 16px;
+      box-shadow:0 6px 18px rgba(16,35,70,.04);
+    }
     .top-grid, .bottom-grid{
       display:grid; gap:20px; margin-top:20px;
     }
@@ -145,7 +191,7 @@
 
     @media (max-width: 980px){
       .top-grid, .bottom-grid{grid-template-columns:1fr}
-      .two-col, .checks, .mini-grid{grid-template-columns:1fr}
+      .workflow-steps, .two-col, .checks, .mini-grid{grid-template-columns:1fr}
       h1{font-size:30px}
     }
   </style>
@@ -163,23 +209,42 @@
       <div class="hero-note">Concept demo only. Not a validated model, not a medical device, and not for patient care.</div>
     </div>
 
+
+    <div class="workflow-steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Enter the fluid signal</div>
+        <div class="step-copy">Start with the device-based fluid reading and how fast it has been rising.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Add quick clinical context</div>
+        <div class="step-copy">Use only a few symptoms and basic vital signs to keep the input fast.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Read the result and trend</div>
+        <div class="step-copy">Look at the result card first, then use the trend chart to see how fluid buildup is changing over time.</div>
+      </div>
+    </div>
+
     <div class="top-grid">
       <div class="card">
-        <h2>Signal input panel</h2>
+        <h2>Patient snapshot</h2>
         <div class="sub">
-          The central feature is not BNP or symptoms alone. The anchor is an <strong>objective fluid-retention signal</strong>,
-          combined with small trend changes that may represent <strong>subclinical congestion</strong>.
+          This tool is built around one question: <strong>is fluid building up earlier than we would usually catch it?</strong> Keep the input short, then read the result card and chart.
         </div>
 
         <div class="section">
-          <h3>Technology-derived congestion signal</h3>
+          <h3>1. Main fluid signal</h3>
+          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Enter the fluid reading first. The rest of the page adds quick context.</div>
           <div class="two-col">
             <div class="field">
-              <label>Extracellular fluid increase vs baseline (%)</label>
+              <label>Fluid signal above baseline (%)</label>
               <input id="ecw" type="number" value="8" />
             </div>
             <div class="field">
-              <label>Signal trajectory</label>
+              <label>Fluid signal trend</label>
               <select id="trajectory">
                 <option value="0">Stable</option>
                 <option value="1">Slow rise over several days</option>
@@ -188,23 +253,13 @@
               </select>
             </div>
             <div class="field">
-              <label>Weight change over 5 days (lb)</label>
+              <label>Weight change in 5 days (lb)</label>
               <input id="weight5" type="number" value="3.5" step="0.1" />
-            </div>
-            <div class="field">
-              <label>Estimated time-to-decompensation if trend continues</label>
-              <select id="timeRisk">
-                <option value="0">Low concern / not estimated</option>
-                <option value="1">Likely &gt; 10 days</option>
-                <option value="2" selected>Likely 5 to 7 days</option>
-                <option value="3">Likely 48 to 96 hours</option>
-              </select>
-            </div>
-          </div>
+            </div>          </div>
         </div>
 
         <div class="section">
-          <h3>Supportive clinical context</h3>
+          <h3>2. Quick clinical context</h3>
           <div class="two-col">
             <div class="field">
               <label>Systolic blood pressure</label>
@@ -217,12 +272,8 @@
             <div class="field">
               <label>Oxygen saturation (%)</label>
               <input id="spo2" type="number" value="95" />
-            </div>
-            <div class="field">
-              <label>Sodium (mEq/L)</label>
-              <input id="na" type="number" value="134" />
-            </div>
-          </div>
+            </div>          </div>
+          <div class="sub" style="margin:-2px 0 14px; font-size:13px;">Keep this short. Only check what is clearly present.</div>
           <div class="checks">
             <label class="check"><input id="orthopnea" type="checkbox" checked>Orthopnea or increasing exertional dyspnea</label>
             <label class="check"><input id="edema" type="checkbox" checked>Peripheral edema</label>
@@ -234,22 +285,22 @@
         </div>
 
         <div class="actions">
-          <button class="primary" onclick="runModel()">Run prototype</button>
-          <button class="secondary" onclick="loadScenario('early')">Load early-congestion example</button>
-          <button class="secondary" onclick="loadScenario('high')">Load near-decompensation example</button>
-          <button class="tertiary" onclick="loadScenario('low')">Load low-risk example</button>
+          <button class="primary" onclick="runModel()">Update results</button>
+          <button class="secondary" onclick="loadScenario('early')">Example: early congestion</button>
+          <button class="secondary" onclick="loadScenario('high')">Example: high concern</button>
+          <button class="tertiary" onclick="loadScenario('low')">Example: stable patient</button>
         </div>
       </div>
 
       <div class="card">
         <div class="risk-head">
-          <h2 style="margin:0">Prototype output</h2>
+          <h2 style="margin:0">Results</h2>
           <div id="riskPill" class="pill mod">Early congestion likely</div>
         </div>
         <div class="score">
           <div id="scoreNum" class="num">61</div>
           <div class="meta">
-            Congestion escalation score<br>
+            Early congestion score<br>
             <span id="scoreText">The dominant signal is a rising extracellular fluid burden.</span>
           </div>
         </div>
@@ -260,21 +311,21 @@
         </div>
 
         <div class="section">
-          <h3>Suggested workflow response</h3>
+          <h3>Suggested next steps</h3>
           <ul id="stepsList"></ul>
         </div>
 
         <div class="mini-grid">
           <div class="mini">
-            <div class="k">Subclinical congestion</div>
+            <div class="k">Early fluid build-up</div>
             <div id="subclinicalOut" class="v">Present</div>
           </div>
           <div class="mini">
-            <div class="k">Trend speed</div>
+            <div class="k">Trend</div>
             <div id="trendOut" class="v">Rising</div>
           </div>
           <div class="mini">
-            <div class="k">Estimated horizon</div>
+            <div class="k">Worsening window</div>
             <div id="horizonOut" class="v">5–7d</div>
           </div>
         </div>
@@ -283,45 +334,42 @@
 
     <div class="bottom-grid">
       <div class="card trend-card">
-        <h2>Fluid trend panel</h2>
+        <h2>Trend view</h2>
         <div class="sub">
-          This is the visual piece that makes the concept feel like medical technology rather than a generic cardiology calculator.
-          The main story is a divergence between baseline and the recent extracellular fluid trend.
+          This chart is meant to be the quickest part to read. The red line shows the fluid signal, the blue line shows weight, and the gold line shows overall concern over the last week.
         </div>
         <div class="legend">
-          <span><i class="dot" style="background:var(--ua-red)"></i> ECW signal</span>
-          <span><i class="dot" style="background:var(--ua-blue)"></i> Weight trend</span>
-          <span><i class="dot" style="background:#b87400"></i> Escalation index</span>
+          <span><i class="dot" style="background:var(--ua-red)"></i> Fluid signal</span>
+          <span><i class="dot" style="background:var(--ua-blue)"></i> Weight</span>
+          <span><i class="dot" style="background:#b87400"></i> Concern level</span>
         </div>
         <svg id="chart" viewBox="0 0 640 280" aria-label="Congestion trend chart"></svg>
         <div id="chartNote" class="chart-note">
-          Over the last week, the extracellular fluid signal has risen more clearly than weight alone, which is the exact pattern this concept is meant to surface.
+          Over the last week, the fluid signal has risen faster than weight alone, which is the pattern this tool is trying to make easier to see.
         </div>
       </div>
 
       <div class="card">
-        <h2>Why this is more tightly mapped to Sumit Agarwal</h2>
+        <h2>How to use this page</h2>
         <div class="research-box">
-          This version no longer behaves like a broad heart-failure risk tool. It is centered on a single research-facing use case:
-          <strong>objective detection of congestion using medical technology</strong>, especially when fluid accumulation may be developing
-          <strong>before</strong> traditional bedside signs become dramatic.
+          This prototype is meant to make subtle fluid changes easier to see before the patient looks obviously worse.
         </div>
         <div class="section">
-          <h3>What changed from the earlier version</h3>
+          <h3>What it helps with</h3>
           <ul>
-            <li>The <strong>extracellular fluid signal</strong> is now the lead variable, not just one item among many.</li>
-            <li>The output is framed around <strong>early congestion</strong> and <strong>time to likely decompensation</strong>, which is more aligned to monitoring technology.</li>
-            <li>The dashboard now emphasizes <strong>trend detection</strong> rather than a one-time snapshot.</li>
-            <li>Routine variables like sodium, blood pressure, and symptoms are kept as supporting context instead of the centerpiece.</li>
+            <li>Track the fluid signal next to short-term weight change.</li>
+            <li>Flag possible early congestion before the patient becomes clearly unstable.</li>
+            <li>Help decide how closely to monitor and when to follow up.</li>
+            <li>Show change over time instead of only showing a one-time score.</li>
           </ul>
         </div>
         <div class="callout">
-          Best outreach framing: “I read your work in heart failure medical technology and built a prototype focused specifically on technology-assisted early congestion detection using an extracellular fluid signal rather than a generic heart-failure score.”
+          Prototype only. The output is a simple demonstration for research and workflow discussion.
         </div>
         <div class="section small">
-          Design note: this version uses the University of Arizona’s primary red and blue palette for the interface styling, while avoiding institutional logos or branding lockups.
+          Styled with an Arizona-inspired red and blue palette, without logos.
         </div>
-      </div>
+      </div>      </div>
     </div>
   </div>
 
@@ -338,11 +386,9 @@
       const ecw = num("ecw");
       const trajectory = num("trajectory");
       const weight5 = num("weight5");
-      const timeRisk = num("timeRisk");
       const sbp = num("sbp");
       const hr = num("hr");
       const spo2 = num("spo2");
-      const na = num("na");
 
       if(ecw >= 12){ score += 30; reasons.push("marked extracellular fluid increase"); }
       else if(ecw >= 8){ score += 22; reasons.push("clear extracellular fluid rise"); }
@@ -357,10 +403,6 @@
       else if(weight5 >= 3){ score += 9; reasons.push("early weight gain"); }
       else if(weight5 >= 1.5){ score += 4; reasons.push("small weight change"); }
 
-      if(timeRisk === 1){ score += 5; reasons.push("possible delayed progression"); }
-      if(timeRisk === 2){ score += 14; reasons.push("decompensation likely within days"); }
-      if(timeRisk === 3){ score += 24; reasons.push("decompensation may be near"); }
-
       if(sbp < 95){ score += 12; reasons.push("low systolic pressure"); }
       else if(sbp < 105){ score += 6; reasons.push("borderline blood pressure"); }
 
@@ -369,9 +411,6 @@
 
       if(spo2 <= 92){ score += 12; reasons.push("oxygen saturation decline"); }
       else if(spo2 <= 95){ score += 5; reasons.push("mild oxygen saturation decline"); }
-
-      if(na < 130){ score += 9; reasons.push("hyponatremia"); }
-      else if(na < 135){ score += 4; reasons.push("small sodium drop"); }
 
       const symptomWeights = {
         orthopnea:[8, "early dyspnea symptoms"],
@@ -388,42 +427,42 @@
 
       score = Math.max(0, Math.min(100, score));
 
-      let label = "Low current concern";
+      let label = "Watch current concern";
       let pillClass = "low";
-      let summary = "Current data do not strongly suggest active congestion escalation.";
+      let summary = "Right now, the pattern does not strongly suggest early fluid worsening.";
       let steps = [
-        "Continue baseline monitoring and compare against the patient’s usual fluid trend.",
-        "Repeat signal capture if weight or exertional tolerance begins to change.",
-        "Use the technology signal primarily as a longitudinal baseline reference."
+        "Continue routine monitoring and compare with the patient’s usual fluid trend.",
+        "Repeat the fluid signal if weight or breathing tolerance begins to change.",
+        "Use this mainly as a baseline tracking tool for now."
       ];
       let subclinical = "Absent";
       let trend = "Stable";
-      let horizon = ">10d";
+      let horizon = "Watch";
 
       if(score >= 33 && score < 67){
         label = "Early congestion likely";
         pillClass = "mod";
-        summary = "Objective fluid-retention signal and short-term trend changes suggest worsening congestion before overt instability.";
+        summary = "The fluid signal and short-term trends suggest early worsening congestion, even if the patient is not yet obviously unstable.";
         steps = [
-          "Review whether the patient is entering an early congestion phase despite only modest bedside changes.",
-          "Trend extracellular fluid signal again within 24 to 72 hours and compare against weight alone.",
-          "Reassess diuretic plan, adherence, and symptom trajectory before the patient progresses to overt decompensation."
+          "Consider whether the patient is entering an early congestion phase despite only mild bedside changes.",
+          "Repeat the fluid signal within 24 to 72 hours and compare it with weight alone.",
+          "Reassess the diuretic plan, adherence, and symptom trend before the patient worsens further."
         ];
         subclinical = "Present";
         trend = trajectory >= 2 ? "Rising" : "Slow rise";
-        horizon = timeRisk === 2 ? "5–7d" : ">7d";
+        horizon = trajectory >= 2 ? "5–7d" : ">7d";
       } else if(score >= 67){
         label = "Escalation approaching";
         pillClass = "high";
-        summary = "The pattern is concerning for technology-detected congestion that may be close to symptomatic decompensation or urgent care utilization.";
+        summary = "This pattern is concerning for meaningful fluid worsening and may be getting close to symptomatic decompensation.";
         steps = [
-          "Prioritize prompt clinician review because the fluid-signal trajectory is no longer subtle.",
-          "Use repeat signal capture, vitals, and clinical exam together to determine whether escalation is already underway.",
-          "Consider this the point where technology may help prevent a hospitalization rather than simply document one."
+          "Prompt clinician review makes sense here because the fluid trend is no longer subtle.",
+          "Use a repeat fluid signal, vital signs, and clinical exam together to decide whether worsening is already underway.",
+          "This is the point where earlier monitoring may help prevent a hospitalization rather than just confirm one."
         ];
         subclinical = "Advanced";
         trend = trajectory === 3 ? "Rapid rise" : "High rise";
-        horizon = timeRisk === 3 ? "48–96h" : "≤7d";
+        horizon = trajectory === 3 ? "48–96h" : "≤7d";
       }
 
       const leadReasons = reasons.slice(0,4).join(", ");
@@ -540,31 +579,25 @@
         document.getElementById("ecw").value = 1.5;
         document.getElementById("trajectory").value = 0;
         document.getElementById("weight5").value = 0.8;
-        document.getElementById("timeRisk").value = 0;
         document.getElementById("sbp").value = 122;
         document.getElementById("hr").value = 78;
         document.getElementById("spo2").value = 97;
-        document.getElementById("na").value = 138;
         setChecks({orthopnea:false, edema:false, fatigue:false, adherence:false, recentAcute:false, crackles:false});
       } else if(type === "high"){
         document.getElementById("ecw").value = 13;
         document.getElementById("trajectory").value = 3;
         document.getElementById("weight5").value = 7.8;
-        document.getElementById("timeRisk").value = 3;
         document.getElementById("sbp").value = 92;
         document.getElementById("hr").value = 114;
         document.getElementById("spo2").value = 91;
-        document.getElementById("na").value = 129;
         setChecks({orthopnea:true, edema:true, fatigue:true, adherence:true, recentAcute:true, crackles:true});
       } else {
         document.getElementById("ecw").value = 8;
         document.getElementById("trajectory").value = 2;
         document.getElementById("weight5").value = 3.5;
-        document.getElementById("timeRisk").value = 2;
         document.getElementById("sbp").value = 108;
         document.getElementById("hr").value = 96;
         document.getElementById("spo2").value = 95;
-        document.getElementById("na").value = 134;
         setChecks({orthopnea:true, edema:true, fatigue:true, adherence:false, recentAcute:false, crackles:false});
       }
       runModel();
