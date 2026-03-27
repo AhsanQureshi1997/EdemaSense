@@ -1,172 +1,491 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EdemaSense</title>
 <style>
+:root{
+  --ua-red:#AB0520;
+  --ua-blue:#0C234B;
+  --bg:#EEF2F8;
+  --panel:#FFFFFF;
+  --line:#D7DDEA;
+  --text:#13233F;
+  --muted:#5A6880;
+  --soft:#F8FAFD;
+  --soft-yellow:#FFF6D8;
+  --yellow-border:#E8D38E;
+  --soft-green:#EEF8F0;
+  --green-border:#CBE6D2;
+  --soft-orange:#FFF0E0;
+  --orange-border:#EBC99A;
+}
+*{box-sizing:border-box}
 body{
-  font-family: Arial, sans-serif;
-  background:#EEF2F8;
   margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
   font-size:14px;
 }
 .wrap{
-  max-width:1100px;
-  margin:10px auto;
-  padding:10px;
+  max-width:1160px;
+  margin:14px auto;
+  padding:0 12px 14px;
 }
 .hero{
-  background:#0C234B;
-  color:white;
-  padding:14px 18px;
-  border-radius:14px;
+  background:linear-gradient(135deg, #08275C 0%, #0C234B 62%, #7F1435 100%);
+  color:#fff;
+  border-radius:18px;
+  padding:16px 20px;
+  box-shadow:0 8px 20px rgba(12,35,75,.10);
 }
 .hero h1{
-  font-size:24px;
-  margin:0 0 6px;
+  margin:0 0 4px;
+  font-size:28px;
+  line-height:1.1;
 }
 .hero p{
-  font-size:13px;
   margin:0;
+  font-size:13px;
+  color:rgba(255,255,255,.92);
 }
 .main{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:12px;
+  gap:14px;
+  margin-top:14px;
+  align-items:start;
 }
 .panel{
-  background:white;
-  border:1px solid #D7DDEA;
-  border-radius:14px;
-  padding:12px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 4px 10px rgba(16,35,70,.04);
 }
 .panel h2{
-  font-size:16px;
-  margin-bottom:8px;
+  margin:0 0 10px;
+  font-size:18px;
+  line-height:1.2;
 }
-.status{
-  background:#FFF6D8;
-  border:1px solid #E8D38E;
-  border-radius:10px;
-  padding:10px;
-  margin-bottom:10px;
+.sub{
+  margin:0 0 12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+.status-card{
+  border:1px solid var(--yellow-border);
+  background:var(--soft-yellow);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+}
+.status-card.low{
+  background:var(--soft-green);
+  border-color:var(--green-border);
+}
+.status-card.high{
+  background:var(--soft-orange);
+  border-color:var(--orange-border);
 }
 .status-title{
-  font-size:18px;
+  font-size:22px;
+  font-weight:bold;
+  margin:0 0 4px;
+}
+.status-sub{
+  font-size:13px;
+  color:var(--text);
+  margin:0 0 2px;
+}
+.status-window{
+  font-size:12px;
+  color:var(--muted);
+}
+.mini-section{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  margin-top:12px;
+}
+.mini-title{
+  font-size:14px;
+  font-weight:bold;
+  margin:0 0 8px;
+}
+.trajectory-labels{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:7px;
+  text-align:center;
+}
+.trajectory-bar{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+}
+.seg{
+  height:10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+}
+.seg.s1{background:var(--soft-green); border-color:var(--green-border);}
+.seg.s2{background:var(--soft-yellow); border-color:var(--yellow-border);}
+.seg.s3{background:#FFF4E7; border-color:#EBC99A;}
+.seg.s4{background:#FFF0F3; border-color:#EDC0C8;}
+.marker{
+  position:absolute;
+  top:-6px;
+  width:0;
+  height:0;
+  border-left:7px solid transparent;
+  border-right:7px solid transparent;
+  border-top:10px solid var(--ua-blue);
+  left:2%;
+  transform:translateX(-50%);
+  transition:left .2s ease;
+}
+.traj-note{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.comp-row{
+  display:grid;
+  grid-template-columns:52px 1fr 72px;
+  gap:8px;
+  align-items:center;
+  margin-top:8px;
+}
+.comp-label{
+  font-size:12px;
   font-weight:bold;
 }
-.small{
-  font-size:12px;
-  color:#555;
-}
-.bar{
+.track{
   height:8px;
-  background:#EEE;
-  border-radius:6px;
+  background:#EEF2F8;
+  border:1px solid var(--line);
+  border-radius:999px;
   overflow:hidden;
 }
-.fill-red{background:#AB0520;height:100%;}
-.fill-blue{background:#0C234B;height:100%;}
-.row{
-  margin-bottom:8px;
+.fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  transition:width .2s ease;
 }
-input{
+.fill.red{background:var(--ua-red);}
+.fill.blue{background:var(--ua-blue);}
+.comp-text{
+  font-size:11px;
+  text-align:right;
+  color:var(--muted);
+}
+ul{
+  margin:8px 0 0 18px;
+  padding:0;
+}
+li{
+  margin-bottom:6px;
+  line-height:1.4;
+}
+.field-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.field{
+  margin-bottom:10px;
+}
+.field label{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  margin-bottom:6px;
+}
+input[type="number"], select{
   width:100%;
-  padding:6px;
-  border-radius:8px;
-  border:1px solid #ccc;
+  border:1px solid #CBD5E4;
+  border-radius:12px;
+  padding:9px 10px;
+  font-size:13px;
+  background:#fff;
+  color:var(--text);
+}
+.symptoms{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 10px;
+  margin-top:2px;
+}
+.check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+}
+.check input{
+  width:16px;
+  height:16px;
+}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
 }
 button{
-  margin-top:8px;
-  padding:6px 10px;
   border:none;
-  border-radius:8px;
-  background:#0C234B;
-  color:white;
+  border-radius:12px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:bold;
   cursor:pointer;
+}
+.primary{background:var(--ua-blue); color:#fff;}
+.secondary{background:#EEF4FB; color:var(--ua-blue); border:1px solid #D7E3F3;}
+.helper{
+  margin-top:8px;
+  font-size:11px;
+  color:var(--muted);
+}
+@media (max-width: 900px){
+  .main{grid-template-columns:1fr;}
 }
 </style>
 </head>
-
 <body>
 <div class="wrap">
+  <div class="hero">
+    <h1>EdemaSense</h1>
+    <p>Detects early congestion using a device-derived fluid signal.</p>
+  </div>
 
-<div class="hero">
-<h1>EdemaSense</h1>
-<p>Detects early congestion using a device-derived fluid signal.</p>
-</div>
+  <div class="main">
+    <div class="panel">
+      <h2>Status</h2>
+      <div id="statusCard" class="status-card">
+        <div id="statusTitle" class="status-title">No data yet</div>
+        <div id="statusSub" class="status-sub">Enter patient data to generate a result.</div>
+        <div id="statusWindow" class="status-window"></div>
+      </div>
 
-<div class="main">
+      <div class="mini-section">
+        <div class="mini-title">Congestion trajectory</div>
+        <div class="trajectory-labels">
+          <span>Stable</span>
+          <span>Early</span>
+          <span>Worsening</span>
+          <span>Imminent</span>
+        </div>
+        <div class="trajectory-bar">
+          <div class="seg s1"></div>
+          <div class="seg s2"></div>
+          <div class="seg s3"></div>
+          <div class="seg s4"></div>
+          <div id="marker" class="marker"></div>
+        </div>
+        <div id="trajNote" class="traj-note">The trajectory view will update once patient data is entered.</div>
+      </div>
 
-<!-- LEFT: RESULT -->
-<div class="panel">
-<h2>Status</h2>
+      <div class="mini-section">
+        <div class="mini-title">Fluid compared with weight</div>
+        <div class="comp-row">
+          <div class="comp-label">Fluid</div>
+          <div class="track"><div id="fluidFill" class="fill red"></div></div>
+          <div id="fluidText" class="comp-text">No data</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-label">Weight</div>
+          <div class="track"><div id="weightFill" class="fill blue"></div></div>
+          <div id="weightText" class="comp-text">No data</div>
+        </div>
+      </div>
 
-<div class="status">
-<div class="status-title" id="statusTitle">No data yet</div>
-<div class="small" id="statusSub">Enter fluid signal to begin</div>
-</div>
+      <div class="mini-section">
+        <div class="mini-title">Why this was flagged</div>
+        <ul id="drivers">
+          <li>No drivers yet</li>
+        </ul>
+      </div>
+    </div>
 
-<div>
-<b>Why</b>
-<ul id="drivers" class="small">
-<li>No drivers yet</li>
-</ul>
-</div>
+    <div class="panel">
+      <h2>Quick patient check</h2>
+      <p class="sub">Start with the fluid signal. Add clinical context only if it is clearly present.</p>
 
-</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Fluid signal above baseline (%)</label>
+          <input id="ecw" type="number" min="0" step="0.1">
+        </div>
+        <div class="field">
+          <label>Fluid signal trend</label>
+          <select id="trend">
+            <option value="">Select</option>
+            <option value="0">Stable</option>
+            <option value="1">Slow rise</option>
+            <option value="2">Consistent rise</option>
+            <option value="3">Rapid rise</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Weight change in 5 days (lb)</label>
+          <input id="weight" type="number" min="0" step="0.1">
+        </div>
+        <div class="field">
+          <label>Systolic blood pressure</label>
+          <input id="sbp" type="number" min="0" step="1">
+        </div>
+      </div>
 
-<!-- RIGHT: INPUT -->
-<div class="panel">
-<h2>Quick patient check</h2>
+      <div class="field">
+        <label>Symptoms</label>
+        <div class="symptoms">
+          <label class="check"><input id="dyspnea" type="checkbox"> Dyspnea</label>
+          <label class="check"><input id="edema" type="checkbox"> Peripheral edema</label>
+          <label class="check"><input id="fatigue" type="checkbox"> Fatigue</label>
+          <label class="check"><input id="crackles" type="checkbox"> Crackles</label>
+        </div>
+      </div>
 
-<div class="row">
-<label>Fluid signal (%)</label>
-<input id="ecw" type="number">
-</div>
-
-<div class="row">
-<label>Weight change (lb)</label>
-<input id="weight" type="number">
-</div>
-
-<div class="row">
-<label>Dyspnea</label>
-<input id="dyspnea" type="checkbox">
-</div>
-
-<button onclick="run()">Generate result</button>
-
-</div>
-
-</div>
+      <div class="actions">
+        <button class="primary" onclick="runModel()">Generate result</button>
+        <button class="secondary" onclick="clearForm()">Clear</button>
+      </div>
+      <div class="helper">Enter data above, then generate result.</div>
+    </div>
+  </div>
 </div>
 
 <script>
-function run(){
- let ecw = Number(document.getElementById("ecw").value||0);
- let weight = Number(document.getElementById("weight").value||0);
- let dyspnea = document.getElementById("dyspnea").checked;
+function runModel(){
+  const ecw = Number(document.getElementById('ecw').value || 0);
+  const trendRaw = document.getElementById('trend').value;
+  const trend = trendRaw === "" ? null : Number(trendRaw);
+  const weight = Number(document.getElementById('weight').value || 0);
+  const sbp = Number(document.getElementById('sbp').value || 0);
+  const dyspnea = document.getElementById('dyspnea').checked;
+  const edema = document.getElementById('edema').checked;
+  const fatigue = document.getElementById('fatigue').checked;
+  const crackles = document.getElementById('crackles').checked;
 
- let status = "Stable";
- let drivers = [];
+  let concern = 0;
+  const drivers = [];
 
- if(ecw>5){status="Early congestion"; drivers.push("Fluid signal rising");}
- if(weight>3){drivers.push("Weight increasing");}
- if(dyspnea){drivers.push("Dyspnea");}
+  if(ecw >= 10){ concern += 34; drivers.push('Fluid signal: +' + ecw + '% above baseline'); }
+  else if(ecw >= 6){ concern += 24; drivers.push('Fluid signal: +' + ecw + '% above baseline'); }
+  else if(ecw > 0){ concern += 12; drivers.push('Fluid signal: +' + ecw + '% above baseline'); }
 
- if(ecw>10){status="Escalation approaching";}
+  if(trend === 1){ concern += 8; drivers.push('Fluid trend: slow rise'); }
+  if(trend === 2){ concern += 16; drivers.push('Fluid trend: consistent rise'); }
+  if(trend === 3){ concern += 24; drivers.push('Fluid trend: rapid rise'); }
 
- document.getElementById("statusTitle").innerText=status;
- document.getElementById("statusSub").innerText="";
+  if(weight >= 5){ concern += 14; drivers.push('Weight: +' + weight + ' lb in 5 days'); }
+  else if(weight >= 2.5){ concern += 8; drivers.push('Weight: +' + weight + ' lb in 5 days'); }
 
- let ul=document.getElementById("drivers");
- ul.innerHTML="";
- if(drivers.length===0){ul.innerHTML="<li>No drivers yet</li>";}
- else{drivers.forEach(d=>{let li=document.createElement("li");li.innerText=d;ul.appendChild(li);});}
+  if(sbp > 0 && sbp < 95){ concern += 10; drivers.push('SBP: ' + sbp); }
+  else if(sbp > 0 && sbp < 105){ concern += 5; drivers.push('SBP: ' + sbp); }
+
+  if(dyspnea){ concern += 7; drivers.push('Dyspnea present'); }
+  if(edema){ concern += 6; drivers.push('Peripheral edema present'); }
+  if(fatigue){ concern += 3; drivers.push('Fatigue present'); }
+  if(crackles){ concern += 7; drivers.push('Crackles present'); }
+
+  concern = Math.max(0, Math.min(100, concern));
+
+  const statusCard = document.getElementById('statusCard');
+  const statusTitle = document.getElementById('statusTitle');
+  const statusSub = document.getElementById('statusSub');
+  const statusWindow = document.getElementById('statusWindow');
+  const marker = document.getElementById('marker');
+  const trajNote = document.getElementById('trajNote');
+
+  if(ecw === 0 && weight === 0 && trend === null && sbp === 0 && !dyspnea && !edema && !fatigue && !crackles){
+    statusCard.className = 'status-card';
+    statusTitle.textContent = 'No data yet';
+    statusSub.textContent = 'Enter patient data to generate a result.';
+    statusWindow.textContent = '';
+    marker.style.left = '2%';
+    trajNote.textContent = 'The trajectory view will update once patient data is entered.';
+    updateDrivers([]);
+    updateCompare(0, 0);
+    return;
+  }
+
+  if(concern < 35){
+    statusCard.className = 'status-card low';
+    statusTitle.textContent = 'Stable monitoring';
+    statusSub.textContent = 'Current inputs do not strongly suggest early congestion.';
+    statusWindow.textContent = 'Current concern: low';
+    trajNote.textContent = 'The patient currently sits in the stable range, without a strong early-congestion pattern.';
+  } else if(concern < 70){
+    statusCard.className = 'status-card';
+    statusTitle.textContent = 'Early congestion likely';
+    statusSub.textContent = 'Fluid signal is rising with supporting clinical context.';
+    statusWindow.textContent = (trend !== null && trend >= 2) ? 'Likely worsening window: 5 to 7 days' : 'Likely worsening window: more than 7 days';
+    trajNote.textContent = 'This pattern suggests a possible early congestion phase, where fluid buildup may be appearing before more obvious deterioration.';
+  } else {
+    statusCard.className = 'status-card high';
+    statusTitle.textContent = 'Escalation approaching';
+    statusSub.textContent = 'Fluid signal and clinical context are now more concerning together.';
+    statusWindow.textContent = (trend === 3) ? 'Likely worsening window: 48 to 96 hours' : 'Likely worsening window: within 7 days';
+    trajNote.textContent = 'The patient appears farther along the congestion pathway and should be reviewed more closely.';
+  }
+
+  marker.style.left = Math.max(2, Math.min(98, concern)) + '%';
+  updateDrivers(drivers.slice(0,4));
+  updateCompare(ecw, weight);
 }
-</script>
 
+function updateDrivers(items){
+  const ul = document.getElementById('drivers');
+  ul.innerHTML = '';
+  if(items.length === 0){
+    ul.innerHTML = '<li>No drivers yet</li>';
+    return;
+  }
+  items.forEach(function(item){
+    const li = document.createElement('li');
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
+
+function updateCompare(ecw, weight){
+  const fluidPct = Math.max(0, Math.min(100, (ecw / 14) * 100));
+  const weightPct = Math.max(0, Math.min(100, (weight / 8) * 100));
+  document.getElementById('fluidFill').style.width = fluidPct + '%';
+  document.getElementById('weightFill').style.width = weightPct + '%';
+  document.getElementById('fluidText').textContent = ecw ? ('+' + ecw + '%') : 'No data';
+  document.getElementById('weightText').textContent = weight ? ('+' + weight + ' lb') : 'No data';
+}
+
+function clearForm(){
+  document.getElementById('ecw').value = '';
+  document.getElementById('trend').value = '';
+  document.getElementById('weight').value = '';
+  document.getElementById('sbp').value = '';
+  document.getElementById('dyspnea').checked = false;
+  document.getElementById('edema').checked = false;
+  document.getElementById('fatigue').checked = false;
+  document.getElementById('crackles').checked = false;
+  runModel();
+}
+
+runModel();
+</script>
 </body>
 </html>
